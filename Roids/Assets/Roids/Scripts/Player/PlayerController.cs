@@ -5,11 +5,6 @@ public class PlayerController : BaseObject
 {
     public WeaponController weaponController;
 
-    //int score;
-
-    Vector3 velocityDirection;
-    Vector3 accelerationDirection;
-
     Vector3 velocity;
     Vector3 acceleration;
 
@@ -26,8 +21,8 @@ public class PlayerController : BaseObject
     public float rotationSlowdown = 10.0f;
     public float maxRotationAmount = 10;
 
-    public float maximumVelocityMagnitudeSquared = 10.0f;
-    public float maximumAccelerationMagnitudeSquared = 1.0f;
+    public float maximumVelocityMagnitude = 10.0f;
+    public float maximumAccelerationMagnitude = 1.0f;
 
     float currentThrustAmount = 0;
 
@@ -38,14 +33,16 @@ public class PlayerController : BaseObject
 
     public override void Logic ()
     {
+        bool isThrusting = currentThrustAmount > 0;
 
-        Debug.DrawLine(transform.position, transform.position + velocity * 10, Color.yellow);
-        //Debug.DrawLine(transform.position, transform.position + acceleration * 100, Color.blue);
+        Debug.DrawLine(transform.position, transform.position + velocity * 10, isThrusting ? Color.yellow : Color.blue);
 
         // MOVEMENT PHYSICS LOGIC
 
 
         velocity += acceleration;
+
+        velocity = Vector3.ClampMagnitude(velocity, maximumVelocityMagnitude);
 
         transform.Translate(velocity * Time.deltaTime, Space.World);
 
@@ -66,7 +63,6 @@ public class PlayerController : BaseObject
 
         // MOVEMENT SLOWDOWN
 
-        bool isThrusting = currentThrustAmount > 0;
         acceleration = Vector3.Lerp(acceleration, Vector3.zero, (isThrusting ? accelerationSlowdown : accelerationSlowdownWhenNotThrusting)  * Time.deltaTime);
         velocity = Vector3.Lerp(velocity, Vector3.zero, (isThrusting ? velocitySlowdown : velocitySlowdownWhenNotThrusting) * Time.deltaTime);
 
@@ -86,6 +82,8 @@ public class PlayerController : BaseObject
         Debug.DrawLine(transform.position, transform.position + thrustAcceleration * 100, Color.red);
         
         acceleration += thrustAcceleration;
+
+        acceleration = Vector3.ClampMagnitude(acceleration, maximumAccelerationMagnitude);
 
         currentThrustAmount = amount;
     }
