@@ -90,6 +90,6 @@ public class PlayerController : BaseObject
 
     public void Fire()
     {
-        weaponController.Fire(transform.forward, 10);
+        weaponController.Fire(transform.forward, 25);
     }
 }

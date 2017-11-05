@@ -8,17 +8,18 @@ public class WeaponController : BaseObject
 
     public override void Setup()
     {
+        // stub -- to be maybe used for reloading and other weapon system innovations
     }
 
     public override void Logic()
     {
+        // stub -- to be maybe used for reloading and other weapon system innovations
     }
 
     public void Fire(Vector3 direction, float speed)
     {
         Projectile t = ProjectilePoolManager.Instance.AddProjectile(projectileTransform);
 
-        t.gameObject.SetActive(true);
         t.transform.forward = direction;
         t.transform.position = transform.position;
         t.Setup();
