@@ -4,17 +4,40 @@ using System.Collections;
 [RequireComponent(typeof(Collider))]
 public class Asteroid : BaseObject
 {
-    Vector3 direction;
-    float speed;
-
-    System.Action<Asteroid> onDeath;
-
-    public void SetupAsteroid(Vector3 direction, float speed, System.Action<Asteroid> onDeath)
+    public Vector3 Direction
     {
-        this.direction = direction;
-        this.speed = speed;
+        get;
+        private set;
+    }
+    public float Speed
+    {
+        get;
+        private set;
+    }
+    public int Lives
+    {
+        get;
+        private set;
+    }
 
-        this.onDeath = onDeath;
+    public Vector3 HitFromDirection
+    {
+        get;
+        private set;
+    }
+
+    System.Action<Asteroid> onHit;
+
+    public void SetupAsteroid(Vector3 direction, float speed, int health, float size, System.Action<Asteroid> onHit)
+    {
+        this.Direction = direction;
+        this.Speed = speed;
+
+        this.Lives = health;
+        this.transform.localScale = Vector3.one * size;
+
+        this.onHit = onHit;
+
         gameObject.SetActive(true);
     }
 
@@ -25,23 +48,32 @@ public class Asteroid : BaseObject
 
     public override void Logic()
     {
-        transform.position += direction * speed * Time.deltaTime;
+        transform.position += Direction * Speed * Time.deltaTime;
+    }
+
+
+    public void Damage()
+    {
+        Lives--;
     }
 
     public void Die()
     {
         gameObject.SetActive(false);
-        if (onDeath != null)
-        {
-            onDeath.Invoke(this);
-        }
     }
 
-    public void OnTriggerEnter(Collider collision)
+    public void OnTriggerEnter(Collider collider)
     {
-        if (collision.gameObject.GetComponent<ProjectilePlayer>())
+        ProjectilePlayer projectile = collider.gameObject.GetComponent<ProjectilePlayer>();
+        if (projectile != null)
         {
-            Die();
+            projectile.Die();
+
+            HitFromDirection = projectile.Velocity.normalized; //(transform.position - collider.transform.position).normalized;
+            if (onHit != null)
+            {
+                onHit.Invoke(this);
+            }
         }
     }
 }

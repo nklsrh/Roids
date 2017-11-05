@@ -3,7 +3,11 @@ using System.Collections;
 
 public class Projectile : BaseObject
 {
-    protected Vector3 velocity;
+    public Vector3 Velocity
+    {
+        get;
+        protected set;
+    }
     protected float lifetime = 1.0f;
 
     protected System.Action<Projectile> onDeath;
@@ -21,7 +25,7 @@ public class Projectile : BaseObject
 
     public override void Logic()
     {
-        transform.position += velocity * Time.deltaTime;
+        transform.position += Velocity * Time.deltaTime;
         lifetime -= Time.deltaTime;
         if (lifetime <= 0)
         {
@@ -31,7 +35,7 @@ public class Projectile : BaseObject
 
     public virtual void SetVelocity(Vector3 velocity)
     {
-        this.velocity = velocity;
+        this.Velocity = velocity;
     }
 
     public virtual void Die()

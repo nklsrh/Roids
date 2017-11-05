@@ -8,7 +8,9 @@ public class PoolManager
     protected List<BaseObject> objectList;
     int lastUsedObject = -1;
 
-    const int MAX_OBJECTS_ALLOWED = 20;
+    int poolSize = 20;
+    float timeBetweenCleanups = 5.0f;
+    float currentTimeBetweenCleanup = 5.0f;
 
     public int Count
     {
@@ -21,16 +23,21 @@ public class PoolManager
         objectList = new List<BaseObject>();
     }
 
+    public void SetPoolSize(int newSize)
+    {
+        poolSize = newSize;
+    }
+
     public virtual BaseObject AddObject(BaseObject template)
     {
         BaseObject p;
-        if (objectList.Count < MAX_OBJECTS_ALLOWED)
+        if (objectList.Count < poolSize)
         {
             p = BaseObject.Instantiate(template);
             objectList.Add(p);
             p.gameObject.name = "[POOLED] " + p.name + " : " + objectList.Count; 
         }
-        else if (lastUsedObject >= MAX_OBJECTS_ALLOWED - 1)
+        else if (lastUsedObject >= poolSize - 1)
         {
             lastUsedObject = -1;
         }
@@ -44,6 +51,29 @@ public class PoolManager
         for (int i = 0; i < objectList.Count; i++)
         {
             objectList[i].Logic();
+        }
+
+        RefreshCount();
+    }
+
+    private void RefreshCount()
+    {
+        if (currentTimeBetweenCleanup > 0)
+        {
+            currentTimeBetweenCleanup -= Time.deltaTime;
+        }
+        else
+        {
+            Count = 0;
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                if (objectList[i].isActiveAndEnabled)
+                {
+                    Count++;
+                }
+            }
+
+            currentTimeBetweenCleanup = timeBetweenCleanups;
         }
     }
 
