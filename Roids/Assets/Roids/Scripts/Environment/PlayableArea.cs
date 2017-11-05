@@ -4,7 +4,7 @@ using System.Collections;
 [RequireComponent(typeof(Collider))]
 public class PlayableArea : MonoBehaviour
 {
-    public Vector3 teleportAxes = new Vector3(1, 0, 1);
+    public Vector3 teleportAxes = new Vector3(1, 0, 1);     // only teleport on the X and Z axes so we stay on a flat surface
 
     public void Setup()
     {
@@ -15,7 +15,7 @@ public class PlayableArea : MonoBehaviour
     {
         // take the players position relative to this area
         // and then decide where to move player relative to that
-        // use flipAxis to decide which axes contribute to the teleport
+        // use teleportAxes to decide which axes contribute to the teleport
 
         Vector3 relativePosition = transform.InverseTransformPoint(other.transform.position);
 
