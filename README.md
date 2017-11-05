@@ -14,3 +14,8 @@ My goal is to write a clean and extensible framework so that:
 
 
 I will only be spending a short time on this project due to time restrictions, so I will keep this readme updated as I progress.
+
+
+
+
+This project is being built with Unity 5.3.4, though you can probably make it work in any Unity 5.x installation.
