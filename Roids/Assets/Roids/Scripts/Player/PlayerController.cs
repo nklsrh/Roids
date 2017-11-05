@@ -3,7 +3,8 @@ using System.Collections;
 
 public class PlayerController : BaseObject
 {
-    public WeaponController weaponController;
+    [SerializeField]
+    WeaponController weaponController;
 
     Vector3 velocity;
     Vector3 acceleration;

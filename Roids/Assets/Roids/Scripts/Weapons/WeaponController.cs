@@ -9,6 +9,8 @@ public class WeaponController : BaseObject
     public override void Setup()
     {
         // stub -- to be maybe used for reloading and other weapon system innovations
+
+        projectileTransform.gameObject.SetActive(false);
     }
 
     public override void Logic()

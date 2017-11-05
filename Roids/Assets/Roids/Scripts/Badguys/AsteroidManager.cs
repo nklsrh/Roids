@@ -23,6 +23,8 @@ public class AsteroidManager : BaseObject
         asteroidPoolManager = new PoolManager();
         asteroidPoolManager.Setup();
         asteroidPoolManager.SetPoolSize(50);
+
+        asteroidTemplate.gameObject.SetActive(false);
     }
 
     public void SetupAsteroidManager(System.Action onAsteroidsCleared)
@@ -41,8 +43,10 @@ public class AsteroidManager : BaseObject
             float randomSpeed = baseSpeed * Random.Range(minInitialAsteroidSpeed, maxInitialAsteroidSpeed);
             float randomSize = Random.Range(1.0f, maxSize);
 
-            a.SetupAsteroid(randomDir, randomSpeed, initialAsteroidHealth, randomSize, AsteroidHit);
+            a.Setup(randomDir, randomSpeed, initialAsteroidHealth, randomSize, AsteroidHit);
         }
+        
+        CheckAllAsteroidsCleared();
     }
 
     public override void Logic()
@@ -64,7 +68,7 @@ public class AsteroidManager : BaseObject
                 float newSpeed = asteroid.Speed * smallerAsteroidSpeedMultiplier;
                 float newSize = asteroidSizesByHealth[asteroid.Lives - 1]; //asteroid.transform.localScale.x * (asteroid.Lives - 1) / asteroid.Lives;
 
-                newAsteroid.SetupAsteroid(randomDir, newSpeed, asteroid.Lives - 1, newSize, AsteroidHit);
+                newAsteroid.Setup(randomDir, newSpeed, asteroid.Lives - 1, newSize, AsteroidHit);
 
                 newAsteroid.transform.position = asteroid.transform.position + newAsteroid.Direction * newAsteroid.Speed * 0.5f;
             }
@@ -73,6 +77,11 @@ public class AsteroidManager : BaseObject
         asteroidPoolManager.DisableObject(asteroid);
         asteroid.Die();
 
+        CheckAllAsteroidsCleared();
+    }
+
+    void CheckAllAsteroidsCleared()
+    {
         if (asteroidPoolManager.Count == 0)
         {
             if (onAsteroidsCleared != null)

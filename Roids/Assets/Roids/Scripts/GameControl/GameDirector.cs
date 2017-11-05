@@ -5,6 +5,7 @@ public class GameDirector : MonoBehaviour
 {
     public PlayerController player;
     public AsteroidManager asteroidManager;
+    public SaucerManager saucerManager;
 
     ProjectilePoolManager projectileManager;
 
@@ -21,15 +22,21 @@ public class GameDirector : MonoBehaviour
     public float initialAsteroidSpeedStart = 0.5f;
     public float initialAsteroidSpeedEnd = 3f;
 
+    bool isAsteroidsCleared = false;
+    bool isSaucersCleared = false;
+
     void Start()
     {
         player.Setup();
+
         asteroidManager.Setup();
-        asteroidManager.SetupAsteroidManager(OnLevelCleared);
+        asteroidManager.SetupAsteroidManager(OnAsteroidsCleared);
 
         projectileManager = new ProjectilePoolManager();
         projectileManager.Setup();
         projectileManager.SetPoolSize(30);
+
+        saucerManager.SetupManager(OnSaucersCleared);
 
         StartNewLevel(0);
     }
@@ -39,20 +46,41 @@ public class GameDirector : MonoBehaviour
         player.Logic();
         projectileManager.Logic();
         asteroidManager.Logic();
+        saucerManager.Logic();
     }
 
     public void StartNewLevel(int newLevel)
     {
         currentLevel = newLevel;
+        isAsteroidsCleared = false;
+        isSaucersCleared = false;
+
         asteroidManager.SpawnNewSet((int)CalculateValueForLevel(asteroidsSpawnedStart, asteroidsSpawnedEnd), 
             CalculateValueForLevel(maxAsteroidSizeStart, maxAsteroidSizeEnd),
             CalculateValueForLevel(initialAsteroidSpeedStart, initialAsteroidSpeedEnd));
+
+        saucerManager.SpawnNewSet(currentLevel + 1, 2, 3);
     }
 
-    private void OnLevelCleared()
+    private void OnAsteroidsCleared()
     {
-        currentLevel++;
-        StartNewLevel(currentLevel);
+        isAsteroidsCleared = true;
+        CheckLevelComplete();
+    }
+
+    private void OnSaucersCleared()
+    {
+        isSaucersCleared = true;
+        CheckLevelComplete();
+    }
+
+    private void CheckLevelComplete()
+    {
+        if (isSaucersCleared && isAsteroidsCleared)
+        {
+            currentLevel++;
+            StartNewLevel(currentLevel);
+        }
     }
 
     private float CalculateValueForLevel(float valueAtFirstLevel, float valueAtLastLevel)
