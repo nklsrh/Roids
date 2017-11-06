@@ -3,13 +3,13 @@ using System.Collections;
 
 public class GameDirector : MonoBehaviour
 {
+    // __________________________________________________________________________________________EDITOR
+
     public PlayerController player;
     public AsteroidManager asteroidManager;
     public SaucerManager saucerManager;
 
-    ProjectilePoolManager projectileManager;
-
-    int currentLevel = 0;
+    // __________________________________________________________________________________________GAME VARIABLES
 
     public int maxLevel = 10;
 
@@ -22,21 +22,23 @@ public class GameDirector : MonoBehaviour
     public float initialAsteroidSpeedStart = 0.5f;
     public float initialAsteroidSpeedEnd = 3f;
 
+
+    // __________________________________________________________________________________________PRIVATES (heh)
+
+    int currentLevel = 0;
+
     bool isAsteroidsCleared = false;
     bool isSaucersCleared = false;
+
+
+    // __________________________________________________________________________________________METHODS
+
 
     void Start()
     {
         player.Setup();
-
-        asteroidManager.Setup();
-        asteroidManager.SetupAsteroidManager(OnAsteroidsCleared);
-
-        projectileManager = new ProjectilePoolManager();
-        projectileManager.Setup();
-        projectileManager.SetPoolSize(30);
-
-        saucerManager.SetupManager(OnSaucersCleared);
+        asteroidManager.Setup(OnAsteroidsCleared);
+        saucerManager.Setup(OnSaucersCleared);
 
         StartNewLevel(0);
     }
@@ -44,7 +46,6 @@ public class GameDirector : MonoBehaviour
     void Update()
     {
         player.Logic();
-        projectileManager.Logic();
         asteroidManager.Logic();
         saucerManager.Logic();
     }

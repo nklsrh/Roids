@@ -1,13 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class PlayerController : BaseObject
 {
+    // __________________________________________________________________________________________EDITOR
+
     [SerializeField]
     WeaponController weaponController;
 
     Vector3 velocity;
     Vector3 acceleration;
+
+    // __________________________________________________________________________________________GAME VARIABLES
 
     public float thrustMultiplier = 0.1f;
     public float rotationMultiplier = 1f;
@@ -18,21 +23,32 @@ public class PlayerController : BaseObject
     public float accelerationSlowdownWhenNotThrusting = 10.0f;
     public float velocitySlowdownWhenNotThrusting = 1.0f;
 
-    float rotationAmount = 0;
     public float rotationSlowdown = 10.0f;
     public float maxRotationAmount = 10;
 
     public float maximumVelocityMagnitude = 10.0f;
     public float maximumAccelerationMagnitude = 1.0f;
 
+    // __________________________________________________________________________________________PRIVATES (heh)
+
+    float rotationAmount = 0;
     float currentThrustAmount = 0;
 
-    public override void Setup ()
+    // __________________________________________________________________________________________METHODS
+
+    public override void Setup()
     {
-        weaponController.Setup();
+        ProjectilePoolManager projectileManagerPlayer = new ProjectilePoolManager(50);
+        weaponController.Setup(projectileManagerPlayer);
     }
 
     public override void Logic ()
+    {
+        MovementLogic();
+        WeaponLogic();
+    }
+
+    void MovementLogic()
     {
         bool isThrusting = currentThrustAmount > 0;
 
@@ -64,10 +80,15 @@ public class PlayerController : BaseObject
 
         // MOVEMENT SLOWDOWN
 
-        acceleration = Vector3.Lerp(acceleration, Vector3.zero, (isThrusting ? accelerationSlowdown : accelerationSlowdownWhenNotThrusting)  * Time.deltaTime);
+        acceleration = Vector3.Lerp(acceleration, Vector3.zero, (isThrusting ? accelerationSlowdown : accelerationSlowdownWhenNotThrusting) * Time.deltaTime);
         velocity = Vector3.Lerp(velocity, Vector3.zero, (isThrusting ? velocitySlowdown : velocitySlowdownWhenNotThrusting) * Time.deltaTime);
 
         currentThrustAmount = 0;
+    }
+
+    void WeaponLogic()
+    {
+        weaponController.Logic();
     }
 
     public void Turn(float amount)

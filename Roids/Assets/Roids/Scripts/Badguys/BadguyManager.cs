@@ -13,17 +13,16 @@ public class BadguyManager : BaseObject
 
     public override void Setup()
     {
-        poolManager = new PoolManager();
-        poolManager.Setup();
-        poolManager.SetPoolSize(poolSize);
+        poolManager = new PoolManager(poolSize);
 
         templateObject.gameObject.SetActive(false);
     }
 
-    public virtual void SetupManager (System.Action onBadguysCleared)
+    public virtual void Setup (System.Action onBadguysCleared)
     {
-        Setup();
         this.onBadguysCleared = onBadguysCleared;
+
+        Setup();
     }
 
     public virtual void SpawnNewSet(int count, float maxSize, float baseSpeed)

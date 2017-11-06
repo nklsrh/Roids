@@ -20,16 +20,16 @@ public class AsteroidManager : BaseObject
 
     public override void Setup()
     {
-        asteroidPoolManager = new PoolManager();
-        asteroidPoolManager.Setup();
-        asteroidPoolManager.SetPoolSize(50);
+        asteroidPoolManager = new PoolManager(50);
 
         asteroidTemplate.gameObject.SetActive(false);
     }
 
-    public void SetupAsteroidManager(System.Action onAsteroidsCleared)
+    public void Setup(System.Action onAsteroidsCleared)
     {
         this.onAsteroidsCleared = onAsteroidsCleared;
+
+        Setup();
     }
 
     public void SpawnNewSet(int count, float maxSize, float baseSpeed)

@@ -18,14 +18,22 @@ public class PoolManager
         private set;
     }
 
+    public PoolManager() { }
+    public PoolManager(int poolSize)
+    {
+        Setup(poolSize);
+    }
+
     public virtual void Setup()
     {
         objectList = new List<BaseObject>();
     }
 
-    public void SetPoolSize(int newSize)
+    public void Setup(int newSize)
     {
         poolSize = newSize;
+
+        Setup();
     }
 
     public virtual BaseObject AddObject(BaseObject template)
@@ -50,7 +58,10 @@ public class PoolManager
     {
         for (int i = 0; i < objectList.Count; i++)
         {
-            objectList[i].Logic();
+            if (objectList[i].gameObject.activeInHierarchy)
+            {
+                objectList[i].Logic();
+            }
         }
 
         RefreshCount();

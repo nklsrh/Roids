@@ -12,11 +12,11 @@ public class Saucer : Badguy
 
     float timeUntilFire = 3.0f;
 
-    public void Setup(Vector3 direction, float speed, int health, float size, System.Action<Saucer> onHit)
+    public void Setup(Vector3 direction, float speed, int health, float size, ProjectilePoolManager projectileManager, System.Action<Saucer> onHit)
     {
         base.Setup(direction, speed, health, size, null);
 
-        weaponController.Setup();
+        weaponController.Setup(projectileManager);
         
         this.onHit = ((Badguy b)=>
         {
@@ -27,6 +27,8 @@ public class Saucer : Badguy
     public override void Logic()
     {
         base.Logic();
+
+        weaponController.Logic();
 
         if (timeUntilFire <= 0)
         {

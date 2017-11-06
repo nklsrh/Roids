@@ -2,25 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[System.Serializable]
 public class ProjectilePoolManager : PoolManager
 {
-    public static ProjectilePoolManager Instance
+    public ProjectilePoolManager() { }
+    public ProjectilePoolManager(int poolSize)
     {
-        get; private set;
-    }
-
-
-
-    public override void Setup()
-    {
-        Instance = this;
-
-        base.Setup();
-    }
-
-    void OnDestroy()
-    {
-        Instance = null;
+        Setup(poolSize);
     }
 
     public Projectile AddProjectile(Projectile template)

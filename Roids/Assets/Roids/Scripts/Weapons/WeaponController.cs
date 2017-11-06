@@ -6,6 +6,8 @@ public class WeaponController : BaseObject
 {
     public Projectile projectileTransform;
 
+    ProjectilePoolManager pool;
+
     public override void Setup()
     {
         // stub -- to be maybe used for reloading and other weapon system innovations
@@ -13,14 +15,21 @@ public class WeaponController : BaseObject
         projectileTransform.gameObject.SetActive(false);
     }
 
+    public void Setup(ProjectilePoolManager pool)
+    {
+        this.pool = pool;
+
+        Setup();
+    }
+
     public override void Logic()
     {
-        // stub -- to be maybe used for reloading and other weapon system innovations
+        pool.Logic();
     }
 
     public void Fire(Vector3 direction, float speed)
     {
-        Projectile t = ProjectilePoolManager.Instance.AddProjectile(projectileTransform);
+        Projectile t = pool.AddProjectile(projectileTransform);
 
         t.transform.forward = direction;
         t.transform.position = transform.position;
