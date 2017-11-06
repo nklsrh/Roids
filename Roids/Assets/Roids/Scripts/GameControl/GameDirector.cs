@@ -53,13 +53,22 @@ public class GameDirector : MonoBehaviour
     public void StartNewLevel(int newLevel)
     {
         currentLevel = newLevel;
-        isAsteroidsCleared = false;
-        isSaucersCleared = false;
 
-        asteroidManager.SpawnNewSet((int)CalculateValueForLevel(asteroidsSpawnedStart, asteroidsSpawnedEnd), 
+        SpawnAsteroids();
+        SpawnSaucers();
+    }
+
+    private void SpawnAsteroids()
+    {
+        isAsteroidsCleared = false;
+        asteroidManager.SpawnNewSet((int)CalculateValueForLevel(asteroidsSpawnedStart, asteroidsSpawnedEnd),
             CalculateValueForLevel(maxAsteroidSizeStart, maxAsteroidSizeEnd),
             CalculateValueForLevel(initialAsteroidSpeedStart, initialAsteroidSpeedEnd));
+    }
 
+    private void SpawnSaucers()
+    {
+        isSaucersCleared = false;
         saucerManager.SpawnNewSet(currentLevel + 1, 2, 3);
     }
 
