@@ -10,6 +10,7 @@ public class BadguyManager : BaseObject
     PoolManager poolManager;
 
     System.Action onBadguysCleared;
+    System.Action<Badguy> onBadguyKilled;
 
     public override void Setup()
     {
@@ -18,9 +19,10 @@ public class BadguyManager : BaseObject
         templateObject.gameObject.SetActive(false);
     }
 
-    public virtual void Setup (System.Action onBadguysCleared)
+    public virtual void Setup (System.Action onBadguysCleared, System.Action<Badguy> onBadguyKilled)
     {
         this.onBadguysCleared = onBadguysCleared;
+        this.onBadguyKilled = onBadguyKilled;
 
         Setup();
     }
@@ -39,6 +41,11 @@ public class BadguyManager : BaseObject
     {
         poolManager.DisableObject(badguy);
         badguy.Die();
+
+        if (onBadguyKilled != null)
+        {
+            onBadguyKilled.Invoke(badguy);
+        }
 
         CheckAllBadguysCleared();
     }

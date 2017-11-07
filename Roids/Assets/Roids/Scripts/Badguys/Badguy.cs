@@ -4,6 +4,8 @@ using System.Collections;
 [RequireComponent(typeof(Collider))]
 public class Badguy : BaseObject
 {
+    // __________________________________________________________________________________________PUBLICS
+
     public Vector3 Direction
     {
         get;
@@ -26,8 +28,24 @@ public class Badguy : BaseObject
         private set;
     }
 
+    // __________________________________________________________________________________________PRIVATES (heh)
+
+    protected Wave.EnemyType enemyType = Wave.EnemyType.Stomper;
+
+    public Wave.EnemyType EnemyType
+    {
+        get
+        {
+            return enemyType;
+        }
+    }
+
     protected System.Action<Badguy> onHit;
 
+    // __________________________________________________________________________________________METHODS
+
+    public Badguy(Wave.EnemyType enemyType) { }
+    
     public virtual void Setup(Vector3 direction, float speed, int health, float size, System.Action<Badguy> onHit)
     {
         this.Direction = direction;

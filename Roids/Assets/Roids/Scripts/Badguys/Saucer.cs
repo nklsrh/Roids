@@ -12,6 +12,11 @@ public class Saucer : Badguy
 
     float timeUntilFire = 3.0f;
 
+    public Saucer() : base (Wave.EnemyType.Saucer)
+    {
+        enemyType = Wave.EnemyType.Saucer;
+    }
+
     public void Setup(Vector3 direction, float speed, int health, float size, ProjectilePoolManager projectileManager, System.Action<Saucer> onHit)
     {
         base.Setup(direction, speed, health, size, null);

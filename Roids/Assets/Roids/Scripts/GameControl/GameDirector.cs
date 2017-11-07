@@ -8,6 +8,7 @@ public class GameDirector : MonoBehaviour
     public PlayerController player;
     public AsteroidManager asteroidManager;
     public SaucerManager saucerManager;
+    public LevelController levelController;
 
     // __________________________________________________________________________________________GAME VARIABLES
 
@@ -22,6 +23,8 @@ public class GameDirector : MonoBehaviour
     public float initialAsteroidSpeedStart = 0.5f;
     public float initialAsteroidSpeedEnd = 3f;
 
+    public float saucerSpeedStart = 1f;
+    public float saucerSpeedEnd = 3f;
 
     // __________________________________________________________________________________________PRIVATES (heh)
 
@@ -30,6 +33,8 @@ public class GameDirector : MonoBehaviour
     bool isAsteroidsCleared = false;
     bool isSaucersCleared = false;
 
+    float timeSinceLevelStarted = 0;
+    float timeWhenWaveFinished = 0;
 
     // __________________________________________________________________________________________METHODS
 
@@ -37,10 +42,11 @@ public class GameDirector : MonoBehaviour
     void Start()
     {
         player.Setup();
+        levelController.Setup(OnSpawnEnemies, OnWaveComplete);
         asteroidManager.Setup(OnAsteroidsCleared);
-        saucerManager.Setup(OnSaucersCleared);
+        saucerManager.Setup(OnSaucersCleared, levelController.BadguyCleared);
 
-        StartNewLevel(0);
+        StartWave();
     }
 
     void Update()
@@ -48,53 +54,91 @@ public class GameDirector : MonoBehaviour
         player.Logic();
         asteroidManager.Logic();
         saucerManager.Logic();
+        levelController.Logic();
+
+        timeSinceLevelStarted += Time.deltaTime;
+
+        if (timeWhenWaveFinished > 0 && timeSinceLevelStarted > timeWhenWaveFinished + 3)
+        {
+            FinishWave();
+        }
     }
 
-    public void StartNewLevel(int newLevel)
+    private void StartWave()
     {
-        currentLevel = newLevel;
-
-        SpawnAsteroids();
-        SpawnSaucers();
+        timeWhenWaveFinished = 0;
+        levelController.StartWave();
     }
 
-    private void SpawnAsteroids()
+    private void FinishWave()
     {
-        isAsteroidsCleared = false;
-        asteroidManager.SpawnNewSet((int)CalculateValueForLevel(asteroidsSpawnedStart, asteroidsSpawnedEnd),
-            CalculateValueForLevel(maxAsteroidSizeStart, maxAsteroidSizeEnd),
-            CalculateValueForLevel(initialAsteroidSpeedStart, initialAsteroidSpeedEnd));
+        GoToNextWave();
     }
 
-    private void SpawnSaucers()
+    public void GoToNextWave()
     {
-        isSaucersCleared = false;
-        saucerManager.SpawnNewSet(currentLevel + 1, 2, 3);
+        levelController.NextWave();
+
+        if (levelController.HasCurrentWave())
+        {
+            timeSinceLevelStarted = 0;
+            currentLevel++;
+        }
+        else
+        {
+            StartWave();
+        }
+    }
+
+    private void OnSpawnEnemies(Wave wave)
+    {
+        switch (wave.enemyType)
+        {
+            case Wave.EnemyType.Asteroid:
+                isAsteroidsCleared = false;
+                asteroidManager.SpawnNewSet(wave.enemyCount, 
+                    CalculateForDifficulty(maxAsteroidSizeStart, maxAsteroidSizeEnd, wave.difficulty), 
+                    CalculateForDifficulty(initialAsteroidSpeedStart, initialAsteroidSpeedEnd, wave.difficulty));
+                break;
+            case Wave.EnemyType.Saucer:
+                isSaucersCleared = false;
+                saucerManager.SpawnNewSet(wave.enemyCount,
+                    2f,
+                    CalculateForDifficulty(saucerSpeedStart, saucerSpeedEnd, wave.difficulty));
+                break;
+        }
+    }
+
+    private void OnWaveComplete()
+    {
+        timeWhenWaveFinished = timeSinceLevelStarted;
     }
 
     private void OnAsteroidsCleared()
     {
         isAsteroidsCleared = true;
-        CheckLevelComplete();
     }
 
     private void OnSaucersCleared()
     {
         isSaucersCleared = true;
-        CheckLevelComplete();
     }
 
-    private void CheckLevelComplete()
-    {
-        if (isSaucersCleared && isAsteroidsCleared)
-        {
-            currentLevel++;
-            StartNewLevel(currentLevel);
-        }
-    }
 
     private float CalculateValueForLevel(float valueAtFirstLevel, float valueAtLastLevel)
     {
-        return valueAtFirstLevel + (valueAtLastLevel - valueAtFirstLevel) * Mathf.Clamp01(currentLevel / (float)maxLevel);
+        return CalculateForDifficulty(valueAtFirstLevel, valueAtLastLevel, Mathf.Clamp01(currentLevel / (float)maxLevel));
+    }
+
+    /// <summary>
+    /// Given value at highest difficulty, lowest difficulty, calculate what value it would be at the required difficulty percentage level
+    /// </summary>
+    /// <param name="valueEasiest"></param>
+    /// <param name="valueHardest"></param>
+    /// <param name="difficulty"></param>
+    /// <returns></returns>
+    private float CalculateForDifficulty(float valueEasiest, float valueHardest, float difficulty)
+    {
+        return valueEasiest + (valueHardest - valueEasiest) * difficulty;
     }
 }

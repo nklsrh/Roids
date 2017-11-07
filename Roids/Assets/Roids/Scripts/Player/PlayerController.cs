@@ -9,14 +9,19 @@ public class PlayerController : BaseObject
     [SerializeField]
     WeaponController weaponController;
 
+    [SerializeField]
+    Transform pivotObject;
+
     Vector3 velocity;
     Vector3 acceleration;
 
     // __________________________________________________________________________________________GAME VARIABLES
 
+    [Header("Input")]
     public float thrustMultiplier = 0.1f;
     public float rotationMultiplier = 1f;
 
+    [Header("Movement")]
     public float accelerationSlowdown = 10.0f;
     public float velocitySlowdown = 1.0f;
 
@@ -29,10 +34,16 @@ public class PlayerController : BaseObject
     public float maximumVelocityMagnitude = 10.0f;
     public float maximumAccelerationMagnitude = 1.0f;
 
+    [Header("Visuals")]
+    public float leanLerp = 5.0f;
+    public float leanRollMultiplier = 0.2f;
+    public float leanPitchMultiplier = 0.2f;
+
     // __________________________________________________________________________________________PRIVATES (heh)
 
     float rotationAmount = 0;
     float currentThrustAmount = 0;
+    Quaternion pivotRotation;
 
     // __________________________________________________________________________________________METHODS
 
@@ -82,6 +93,12 @@ public class PlayerController : BaseObject
 
         acceleration = Vector3.Lerp(acceleration, Vector3.zero, (isThrusting ? accelerationSlowdown : accelerationSlowdownWhenNotThrusting) * Time.deltaTime);
         velocity = Vector3.Lerp(velocity, Vector3.zero, (isThrusting ? velocitySlowdown : velocitySlowdownWhenNotThrusting) * Time.deltaTime);
+
+
+        pivotRotation = Quaternion.Euler(currentThrustAmount * leanPitchMultiplier, 0, rotationAmount * leanRollMultiplier);
+
+        pivotObject.localRotation = Quaternion.Slerp(pivotObject.localRotation, pivotRotation, leanLerp * Time.deltaTime);
+
 
         currentThrustAmount = 0;
     }
