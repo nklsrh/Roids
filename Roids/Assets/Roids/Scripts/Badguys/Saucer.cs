@@ -17,16 +17,21 @@ public class Saucer : Badguy
         enemyType = Wave.EnemyType.Saucer;
     }
 
-    public void Setup(Vector3 direction, float speed, int health, float size, ProjectilePoolManager projectileManager, System.Action<Saucer> onHit)
+    public void Setup(Vector3 direction, float speed, int health, float size, ProjectilePoolManager projectileManager, System.Action<Saucer> onDeath)
     {
         base.Setup(direction, speed, health, size, null);
 
+        healthController = new HealthController(health);
+
         weaponController.Setup(projectileManager);
-        
-        this.onHit = ((Badguy b)=>
+
+        if (onDeath != null)
         {
-            onHit.Invoke(b as Saucer);
-        });
+            this.healthController.onDeath += (() =>
+            {
+                onDeath.Invoke(this);
+            });
+        }
     }
 
     public override void Logic()

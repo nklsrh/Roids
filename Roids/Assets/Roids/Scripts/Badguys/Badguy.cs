@@ -16,11 +16,6 @@ public class Badguy : BaseObject
         get;
         private set;
     }
-    public int Lives
-    {
-        get;
-        private set;
-    }
 
     public Vector3 HitFromDirection
     {
@@ -40,6 +35,9 @@ public class Badguy : BaseObject
         }
     }
 
+    [SerializeField]
+    protected HealthController healthController;
+
     protected System.Action<Badguy> onHit;
 
     // __________________________________________________________________________________________METHODS
@@ -51,7 +49,9 @@ public class Badguy : BaseObject
         this.Direction = direction;
         this.Speed = speed;
 
-        this.Lives = health;
+        healthController = new HealthController(health);
+        healthController.onDeath += Die;
+
         this.transform.localScale = Vector3.one * size;
 
         this.onHit = onHit;
@@ -69,12 +69,6 @@ public class Badguy : BaseObject
         transform.position += Direction * Speed * Time.deltaTime;
     }
 
-
-    public virtual void Damage()
-    {
-        Lives--;
-    }
-
     public virtual void Die()
     {
         gameObject.SetActive(false);
@@ -87,8 +81,8 @@ public class Badguy : BaseObject
         {
             projectile.Die();
 
-            Damage();
-            
+            healthController.Damage(projectile.damage);
+
             HitFromDirection = projectile.Velocity.normalized; //(transform.position - collider.transform.position).normalized;
             if (onHit != null)
             {

@@ -10,6 +10,9 @@ public class PlayerController : BaseObject
     WeaponController weaponController;
 
     [SerializeField]
+    HealthController healthController;
+
+    [SerializeField]
     Transform pivotObject;
 
     Vector3 velocity;
@@ -49,6 +52,8 @@ public class PlayerController : BaseObject
 
     public override void Setup()
     {
+        healthController = new HealthController(100);
+
         ProjectilePoolManager projectileManagerPlayer = new ProjectilePoolManager(50);
         weaponController.Setup(projectileManagerPlayer);
     }

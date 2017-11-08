@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class SaucerManager : BadguyManager
 {
-    public int initialSaucerHealth = 1;
+    public int initialSaucerHealth = 10;
 
     public float maxInitialSaucerSpeed = 3f;
     public float minInitialSaucerSpeed = 0.2f;
@@ -29,15 +29,7 @@ public class SaucerManager : BadguyManager
             float randomSpeed = baseSpeed * Random.Range(minInitialSaucerSpeed, maxInitialSaucerSpeed);
             float randomSize = maxSize;
 
-            saucer.Setup(randomDir, randomSpeed, initialSaucerHealth, randomSize, projectileManager, SaucerHit);
-        }
-    }
-
-    public void SaucerHit(Saucer saucer)
-    {
-        if (saucer.Lives <= 0)
-        {
-            RemoveBadguy(saucer);
+            saucer.Setup(randomDir, randomSpeed, initialSaucerHealth, randomSize, projectileManager, RemoveBadguy);
         }
     }
 }

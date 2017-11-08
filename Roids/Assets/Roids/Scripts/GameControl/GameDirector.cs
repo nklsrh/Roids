@@ -26,15 +26,22 @@ public class GameDirector : MonoBehaviour
     public float saucerSpeedStart = 1f;
     public float saucerSpeedEnd = 3f;
 
+    // __________________________________________________________________________________________EVENTS
+
+    System.Action onWaveStarted;
+    System.Action<Wave> onWaveComplete;
+    System.Action<int> onLevelComplete;
+    System.Action<Wave.EnemyType> onSpawnEnemies;
+    System.Action<Wave.EnemyType> onClearEnemies;
+
+
     // __________________________________________________________________________________________PRIVATES (heh)
 
     int currentLevel = 0;
 
-    bool isAsteroidsCleared = false;
-    bool isSaucersCleared = false;
-
     float timeSinceLevelStarted = 0;
     float timeWhenWaveFinished = 0;
+
 
     // __________________________________________________________________________________________METHODS
 
@@ -43,8 +50,8 @@ public class GameDirector : MonoBehaviour
     {
         player.Setup();
         levelController.Setup(OnSpawnEnemies, OnWaveComplete);
-        asteroidManager.Setup(OnAsteroidsCleared);
-        saucerManager.Setup(OnSaucersCleared, levelController.BadguyCleared);
+        asteroidManager.Setup(null, ClearEnemies);
+        saucerManager.Setup(null, ClearEnemies);
 
         StartWave();
     }
@@ -66,12 +73,22 @@ public class GameDirector : MonoBehaviour
 
     private void StartWave()
     {
-        timeWhenWaveFinished = 0;
         levelController.StartWave();
+
+        if (onWaveStarted != null)
+        {
+            onWaveStarted.Invoke();
+        }
     }
 
     private void FinishWave()
     {
+        if (onWaveComplete != null)
+        {
+            onWaveComplete.Invoke(levelController.Wave);
+        }
+
+        timeWhenWaveFinished = 0;
         GoToNextWave();
     }
 
@@ -79,29 +96,41 @@ public class GameDirector : MonoBehaviour
     {
         levelController.NextWave();
 
-        if (levelController.HasCurrentWave())
+        if (!levelController.CanStartWave())
         {
-            timeSinceLevelStarted = 0;
-            currentLevel++;
+            LevelComplete();
         }
-        else
+
+        StartWave();
+    }
+
+    void LevelComplete()
+    {
+        if (onLevelComplete != null)
         {
-            StartWave();
+            onLevelComplete.Invoke(currentLevel);
         }
+
+        timeSinceLevelStarted = 0;
+        currentLevel++;
+        levelController.RestartWaves();
     }
 
     private void OnSpawnEnemies(Wave wave)
     {
+        if (onSpawnEnemies != null)
+        {
+            onSpawnEnemies.Invoke(wave.enemyType);
+        }
+
         switch (wave.enemyType)
         {
             case Wave.EnemyType.Asteroid:
-                isAsteroidsCleared = false;
                 asteroidManager.SpawnNewSet(wave.enemyCount, 
                     CalculateForDifficulty(maxAsteroidSizeStart, maxAsteroidSizeEnd, wave.difficulty), 
                     CalculateForDifficulty(initialAsteroidSpeedStart, initialAsteroidSpeedEnd, wave.difficulty));
                 break;
             case Wave.EnemyType.Saucer:
-                isSaucersCleared = false;
                 saucerManager.SpawnNewSet(wave.enemyCount,
                     2f,
                     CalculateForDifficulty(saucerSpeedStart, saucerSpeedEnd, wave.difficulty));
@@ -109,21 +138,20 @@ public class GameDirector : MonoBehaviour
         }
     }
 
+    private void ClearEnemies(Badguy badguy)
+    {
+        if (onClearEnemies != null)
+        {
+            onClearEnemies.Invoke(badguy.EnemyType);
+        }
+
+        levelController.BadguyCleared(badguy);
+    }
+
     private void OnWaveComplete()
     {
         timeWhenWaveFinished = timeSinceLevelStarted;
     }
-
-    private void OnAsteroidsCleared()
-    {
-        isAsteroidsCleared = true;
-    }
-
-    private void OnSaucersCleared()
-    {
-        isSaucersCleared = true;
-    }
-
 
     private float CalculateValueForLevel(float valueAtFirstLevel, float valueAtLastLevel)
     {

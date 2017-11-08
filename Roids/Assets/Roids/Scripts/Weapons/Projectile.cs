@@ -10,6 +10,8 @@ public class Projectile : BaseObject
     }
     protected float lifetime = 1.0f;
 
+    public float damage;
+
     protected System.Action<Projectile> onDeath;
 
     public override void Setup()

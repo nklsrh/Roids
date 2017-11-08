@@ -10,7 +10,7 @@ public class LevelController : BaseObject
     {
         get
         {
-            if (wave == null || currentWave < waves.Count)
+            if (currentWave < waves.Count)
             {
                 wave = waves[currentWave];
             }
@@ -35,6 +35,11 @@ public class LevelController : BaseObject
         this.actionWaveComplete = actionWaveComplete;
 
         Setup();
+    }
+
+    public bool CanStartWave()
+    {
+        return Wave != null;
     }
 
     public bool HasCurrentWave()
@@ -76,6 +81,12 @@ public class LevelController : BaseObject
     public void NextWave()
     {
         currentWave++;
+        wave = null;
+    }
+
+    public void RestartWaves()
+    {
+        currentWave = 0;
     }
 
     public void BadguyCleared(Badguy badguy)
