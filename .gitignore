@@ -3,3 +3,6 @@ Roids/Library/
 *.csproj
 *.suo
 Roids/Temp/
+*.db
+.db.meta
+*.db.meta
