@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameDirector : MonoBehaviour
+public class GameDirector : BaseObject
 {
     // __________________________________________________________________________________________EDITOR
 
@@ -28,11 +28,11 @@ public class GameDirector : MonoBehaviour
 
     // __________________________________________________________________________________________EVENTS
 
-    System.Action onWaveStarted;
-    System.Action<Wave> onWaveComplete;
-    System.Action<int> onLevelComplete;
-    System.Action<Wave.EnemyType> onSpawnEnemies;
-    System.Action<Wave.EnemyType> onClearEnemies;
+    public System.Action<Wave> onWaveStarted;
+    public System.Action<Wave> onWaveComplete;
+    public System.Action<int> onLevelComplete;
+    public System.Action<Wave.EnemyType> onSpawnEnemies;
+    public System.Action<Wave.EnemyType> onClearEnemies;
 
 
     // __________________________________________________________________________________________PRIVATES (heh)
@@ -46,17 +46,15 @@ public class GameDirector : MonoBehaviour
     // __________________________________________________________________________________________METHODS
 
 
-    void Start()
+    public override void Setup()
     {
         player.Setup();
         levelController.Setup(OnSpawnEnemies, OnWaveComplete);
         asteroidManager.Setup(null, ClearEnemies);
         saucerManager.Setup(null, ClearEnemies);
-
-        StartWave();
     }
 
-    void Update()
+    public override void Logic()
     {
         player.Logic();
         asteroidManager.Logic();
@@ -71,23 +69,18 @@ public class GameDirector : MonoBehaviour
         }
     }
 
-    private void StartWave()
+    public void StartWave()
     {
         levelController.StartWave();
 
         if (onWaveStarted != null)
         {
-            onWaveStarted.Invoke();
+            onWaveStarted.Invoke(levelController.Wave);
         }
     }
 
     private void FinishWave()
     {
-        if (onWaveComplete != null)
-        {
-            onWaveComplete.Invoke(levelController.Wave);
-        }
-
         timeWhenWaveFinished = 0;
         GoToNextWave();
     }
@@ -151,6 +144,11 @@ public class GameDirector : MonoBehaviour
     private void OnWaveComplete()
     {
         timeWhenWaveFinished = timeSinceLevelStarted;
+        
+        if (onWaveComplete != null)
+        {
+            onWaveComplete.Invoke(levelController.Wave);
+        }
     }
 
     private float CalculateValueForLevel(float valueAtFirstLevel, float valueAtLastLevel)
