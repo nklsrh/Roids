@@ -19,7 +19,7 @@ public class AsteroidManager : BadguyManager
             Asteroid a = GetNewBadguy() as Asteroid;
             a.transform.position = new Vector3(Random.Range(-3, 3), 0, Random.Range(-3, 3));
 
-            Vector3 randomDir = new Vector3(Random.Range(-1, 1), 0, Random.Range(-1, 1)).normalized;
+            Vector3 randomDir = GetRandomDirection();
             float randomSpeed = baseSpeed * Random.Range(minInitialAsteroidSpeed, maxInitialAsteroidSpeed);
             float randomSize = Random.Range(1.0f, maxSize);
 
@@ -37,8 +37,8 @@ public class AsteroidManager : BadguyManager
 
                 // add a little magic to make the new asteroids disperse away from the collision
                 // so you have to chase them down / they don't hurtle toward you
-                Vector3 randomDir = (asteroid.HitFromDirection + new Vector3(Random.Range(-1, 1), 0, Random.Range(-1, 1))).normalized;
-                float newSpeed = asteroid.Speed * smallerAsteroidSpeedMultiplier;
+                Vector3 randomDir = (asteroid.HitFromDirection + GetRandomDirection()).normalized;
+                float newSpeed = asteroid.Speed * smallerAsteroidSpeedMultiplier * Random.Range(0.6f, 2f);
                 float newSize = asteroidSizesByHealth[asteroid.ChunksRemaining - 1]; //asteroid.transform.localScale.x * (asteroid.Lives - 1) / asteroid.Lives;
 
                 newAsteroid.Setup(randomDir, newSpeed, asteroid.ChunksRemaining - 1, newSize, AsteroidHit);

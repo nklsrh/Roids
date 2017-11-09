@@ -65,4 +65,10 @@ public class BadguyManager : BaseObject
     {
         return poolManager.AddObject(templateObject) as Badguy;
     }
+
+    protected virtual Vector3 GetRandomDirection()
+    {
+        Vector3 v = Random.insideUnitCircle;
+        return new Vector3(v.x, 0, v.y);
+    }
 }

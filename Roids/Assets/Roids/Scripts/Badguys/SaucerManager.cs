@@ -25,7 +25,7 @@ public class SaucerManager : BadguyManager
             Saucer saucer = GetNewBadguy() as Saucer;
             saucer.transform.position = new Vector3(Random.Range(-3, 3), 0, Random.Range(-3, 3));
 
-            Vector3 randomDir = new Vector3(Random.Range(-1, 1), 0, Random.Range(-1, 1)).normalized;
+            Vector3 randomDir = GetRandomDirection();
             float randomSpeed = baseSpeed * Random.Range(minInitialSaucerSpeed, maxInitialSaucerSpeed);
             float randomSize = maxSize;
 
