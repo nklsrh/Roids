@@ -6,6 +6,8 @@ public class PlayerController : BaseObject
 {
     // __________________________________________________________________________________________EDITOR
 
+    public CameraController cameraController;
+
     [SerializeField]
     WeaponController weaponController;
 
@@ -15,6 +17,13 @@ public class PlayerController : BaseObject
     [SerializeField]
     Transform pivotObject;
 
+    public Vector3 Velocity
+    {
+        get
+        {
+            return velocity;
+        }
+    }
     Vector3 velocity;
     Vector3 acceleration;
 
@@ -56,12 +65,15 @@ public class PlayerController : BaseObject
 
         ProjectilePoolManager projectileManagerPlayer = new ProjectilePoolManager(50);
         weaponController.Setup(projectileManagerPlayer);
+
+        cameraController.Setup(this);
     }
 
     public override void Logic ()
     {
         MovementLogic();
         WeaponLogic();
+        cameraController.Logic();
     }
 
     void MovementLogic()
