@@ -43,7 +43,7 @@ public class Badguy : BaseObject
 
     public Badguy(Wave.EnemyType enemyType) { }
     
-    public virtual void Setup(Vector3 direction, float speed, int health, float size, System.Action<Badguy> onHit)
+    public virtual void Setup(Vector3 direction, float speed, float health, float size, System.Action<Badguy> onHit)
     {
         this.Direction = direction;
         this.Speed = speed;

@@ -14,11 +14,11 @@ public class Asteroid : Badguy
         enemyType = Wave.EnemyType.Asteroid;
     }
 
-    public void Setup(Vector3 direction, float speed, int health, float size, System.Action<Asteroid> onHit)
+    public void Setup(Vector3 direction, float speed, float health, float size, int chunks, System.Action<Asteroid> onHit)
     {
         base.Setup(direction, speed, health, size, null);
 
-        ChunksRemaining = health;
+        ChunksRemaining = chunks;
 
         this.onHit = ((Badguy b)=>
         {

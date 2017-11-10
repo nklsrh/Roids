@@ -22,7 +22,6 @@ public class Projectile : BaseObject
     public virtual void SetupProjectile(System.Action<Projectile> onDeath)
     {
         this.onDeath = onDeath;
-        lifetime = 1.0f;
     }
 
     public override void Logic()

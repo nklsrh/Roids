@@ -8,6 +8,7 @@ public class GameDirector : BaseObject
     public PlayerController player;
     public AsteroidManager asteroidManager;
     public SaucerManager saucerManager;
+    public ExplosionManager explosionManager;
     public LevelController levelController;
 
     // __________________________________________________________________________________________GAME VARIABLES
@@ -53,6 +54,7 @@ public class GameDirector : BaseObject
         levelController.Setup(OnWaveStarted, OnWaveComplete);
         asteroidManager.Setup(null, ClearEnemies);
         saucerManager.Setup(null, ClearEnemies);
+        explosionManager.Setup();
     }
 
     public override void Logic()
@@ -61,6 +63,7 @@ public class GameDirector : BaseObject
         asteroidManager.Logic();
         saucerManager.Logic();
         levelController.Logic();
+        explosionManager.Logic();
 
         timeSinceLevelStarted += Time.deltaTime;
 
@@ -138,6 +141,8 @@ public class GameDirector : BaseObject
         {
             onClearEnemies.Invoke(badguy.EnemyType);
         }
+
+        explosionManager.CreateExplosion(badguy.transform.position, (float)badguy.healthController.HealthMax / 20.0f);
 
         levelController.BadguyCleared(badguy);
     }

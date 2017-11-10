@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class AsteroidManager : BadguyManager
 {
     public float smallerAsteroidSpeedMultiplier = 2.5f;
-    public int initialAsteroidHealth = 3;
+    public int initialAsteroidChunks = 3;
 
     public float maxInitialAsteroidSpeed = 3f;
     public float minInitialAsteroidSpeed = 0.2f;
@@ -23,7 +23,7 @@ public class AsteroidManager : BadguyManager
             float randomSpeed = baseSpeed * Random.Range(minInitialAsteroidSpeed, maxInitialAsteroidSpeed);
             float randomSize = Random.Range(1.0f, maxSize);
 
-            a.Setup(randomDir, randomSpeed, initialAsteroidHealth, randomSize, AsteroidHit);
+            a.Setup(randomDir, randomSpeed, 10.0f, randomSize, initialAsteroidChunks, AsteroidHit);
         }
     }
 
@@ -41,7 +41,7 @@ public class AsteroidManager : BadguyManager
                 float newSpeed = asteroid.Speed * smallerAsteroidSpeedMultiplier * Random.Range(0.6f, 2f);
                 float newSize = asteroidSizesByHealth[asteroid.ChunksRemaining - 1]; //asteroid.transform.localScale.x * (asteroid.Lives - 1) / asteroid.Lives;
 
-                newAsteroid.Setup(randomDir, newSpeed, asteroid.ChunksRemaining - 1, newSize, AsteroidHit);
+                newAsteroid.Setup(randomDir, newSpeed, asteroid.healthController.HealthMax, newSize, asteroid.ChunksRemaining - 1, AsteroidHit);
 
                 newAsteroid.transform.position = asteroid.transform.position + newAsteroid.Direction * newAsteroid.Speed * 0.5f;
             }
