@@ -20,9 +20,7 @@ public class Saucer : Badguy
     public void Setup(Vector3 direction, float speed, int health, float size, ProjectilePoolManager projectileManager, System.Action<Saucer> onDeath)
     {
         base.Setup(direction, speed, health, size, null);
-
-        healthController = new HealthController(health);
-
+        
         weaponController.Setup(projectileManager);
 
         if (onDeath != null)

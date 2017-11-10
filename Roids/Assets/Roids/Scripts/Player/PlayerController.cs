@@ -2,17 +2,15 @@
 using System.Collections;
 using System;
 
+[RequireComponent(typeof(Collider))]
 public class PlayerController : BaseObject
 {
     // __________________________________________________________________________________________EDITOR
 
-    public CameraController cameraController;
+    public HealthController healthController;
 
     [SerializeField]
     WeaponController weaponController;
-
-    [SerializeField]
-    HealthController healthController;
 
     [SerializeField]
     Transform pivotObject;
@@ -61,19 +59,17 @@ public class PlayerController : BaseObject
 
     public override void Setup()
     {
-        healthController = new HealthController(100);
+		healthController.Setup(100);
 
         ProjectilePoolManager projectileManagerPlayer = new ProjectilePoolManager(50);
         weaponController.Setup(projectileManagerPlayer);
 
-        cameraController.Setup(this);
     }
 
     public override void Logic ()
     {
         MovementLogic();
         WeaponLogic();
-        cameraController.Logic();
     }
 
     void MovementLogic()
@@ -147,5 +143,40 @@ public class PlayerController : BaseObject
     public void Fire()
     {
         weaponController.Fire(transform.forward, 25);
+    }
+
+
+
+
+    void OnTriggerEnter(Collider other)
+    {
+        bool isHit = false;
+        float damage = 0;
+
+		if (healthController.IsAlive)
+		{
+			ProjectileEnemy projectile = other.gameObject.GetComponent<ProjectileEnemy>();
+			if (projectile != null)
+			{
+				projectile.Die();
+                damage = projectile.damage;
+                isHit = true;
+			}
+            else
+            {
+                Badguy b = other.gameObject.GetComponent<Badguy>();
+                if (b != null)
+                {
+                    damage = b.healthController.Health;
+                }
+            }
+		}        
+
+        
+        if (isHit)
+        {
+            healthController.Damage(damage);
+            Debug.Log("DAMAGE " + damage);
+        }
     }
 }

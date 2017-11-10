@@ -35,8 +35,7 @@ public class Badguy : BaseObject
         }
     }
 
-    [SerializeField]
-    protected HealthController healthController;
+    public HealthController healthController;
 
     protected System.Action<Badguy> onHit;
 
@@ -49,7 +48,7 @@ public class Badguy : BaseObject
         this.Direction = direction;
         this.Speed = speed;
 
-        healthController = new HealthController(health);
+        healthController.Setup(health);
         healthController.onDeath += Die;
 
         this.transform.localScale = Vector3.one * size;

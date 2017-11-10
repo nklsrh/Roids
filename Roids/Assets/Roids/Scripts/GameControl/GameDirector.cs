@@ -42,6 +42,7 @@ public class GameDirector : BaseObject
     float timeSinceLevelStarted = 0;
     float timeWhenWaveFinished = 0;
 
+    const float WAIT_BETWEEN_WAVES = 3.0f;
 
     // __________________________________________________________________________________________METHODS
 
@@ -49,7 +50,7 @@ public class GameDirector : BaseObject
     public override void Setup()
     {
         player.Setup();
-        levelController.Setup(OnSpawnEnemies, OnWaveComplete);
+        levelController.Setup(OnWaveStarted, OnWaveComplete);
         asteroidManager.Setup(null, ClearEnemies);
         saucerManager.Setup(null, ClearEnemies);
     }
@@ -63,7 +64,7 @@ public class GameDirector : BaseObject
 
         timeSinceLevelStarted += Time.deltaTime;
 
-        if (timeWhenWaveFinished > 0 && timeSinceLevelStarted > timeWhenWaveFinished + 3)
+        if (timeWhenWaveFinished > 0 && timeSinceLevelStarted > timeWhenWaveFinished + WAIT_BETWEEN_WAVES)
         {
             FinishWave();
         }
@@ -109,7 +110,7 @@ public class GameDirector : BaseObject
         levelController.RestartWaves();
     }
 
-    private void OnSpawnEnemies(Wave wave)
+    private void SpawnEnemies(Wave wave)
     {
         if (onSpawnEnemies != null)
         {
@@ -139,6 +140,11 @@ public class GameDirector : BaseObject
         }
 
         levelController.BadguyCleared(badguy);
+    }
+
+    private void OnWaveStarted(Wave wave)
+    {
+        SpawnEnemies(wave);
     }
 
     private void OnWaveComplete()

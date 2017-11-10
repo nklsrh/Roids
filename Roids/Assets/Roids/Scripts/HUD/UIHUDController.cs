@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class UIHUDController : BaseObject 
 {
@@ -9,15 +10,34 @@ public class UIHUDController : BaseObject
 
 	public UIHUDNotifyWaveComplete notifyWaveComplete;
 
+	private CameraController mainCamera;
+	private List<UIHUDHealth> healthBarList;
+
 	public override void Setup(){}
 
-	public void Setup (GameDirector gameDirector) 
+	public void Setup (GameDirector gameDirector, CameraController cam) 
 	{
+		healthBarList = new List<UIHUDHealth>();
+
+		HealthController.onCreated += OnHealthCreated;
+		HealthController.onDestroyed += OnHealthDestroyed;
+
 		gameDirector.onWaveStarted += OnWaveStarted;
-		gameDirector.onWaveComplete += OnWaveComplete;
+		gameDirector.onWaveComplete += OnWaveComplete;		
+
+		mainCamera = cam;
 	}
 
 	public override void Logic()
+	{
+
+	}
+
+	void OnHealthCreated(HealthController healthController)
+	{
+		AddHealthBar(healthController);
+	}
+	void OnHealthDestroyed(HealthController healthController)
 	{
 
 	}
@@ -41,5 +61,19 @@ public class UIHUDController : BaseObject
 	{
 		timer.Disable();
 		notifyWaveComplete.Popup("Wave Complete", 1.5f);
+	}
+
+
+	void AddHealthBar(HealthController healthController)
+	{
+		if (healthController.isTrackedByUI)
+		{
+			UIHUDHealth h = Instantiate(health);
+			h.Setup(healthController, mainCamera);
+
+			h.transform.SetParent(health.transform.parent, false);
+			
+			healthBarList.Add(h);
+		}
 	}
 }

@@ -25,8 +25,8 @@ public class Wave
     public EnemyType enemyType;
     public int enemyCount = 1;
     public float difficulty = 0.0f;
-
     public float duration = -1;
+    public int objectiveRequiredValue = 0;
 
     public bool IsTimeBased
     {
