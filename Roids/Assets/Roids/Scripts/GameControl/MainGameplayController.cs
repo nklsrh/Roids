@@ -127,7 +127,6 @@ public class MainGameplayController : MonoBehaviour
     }
 
 
-
     void Update()
     {
         if (currentLoop != null)
@@ -135,12 +134,6 @@ public class MainGameplayController : MonoBehaviour
             currentLoop.Invoke();
         }
         currentStateTime += Time.deltaTime;
-
-
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            OnGameOver(gameDirector.levelController.Wave);
-        }
     }
 
     void LateUpdate()
