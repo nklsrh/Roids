@@ -14,10 +14,8 @@ public class Wave
 
     public enum EnemyType
     {
-        Asteroid,
-        Saucer,
-        Juggernaut,
-        Stomper
+        Asteroid = 0,
+        Shuttle = 1,
     }
 
     public float Difficulty
@@ -43,6 +41,21 @@ public class Wave
     public float duration = -1;
     public int objectiveRequiredValue = 0;
     private float overrideDifficulty = 0;
+
+    public string GetObjectiveString()
+    {
+        switch (objective)
+        {
+            case ObjectiveType.Protect:
+                return "Protect " + objectiveRequiredValue + " bases";
+            case ObjectiveType.KillAll:
+                return "Destroy " + enemyCount + " " + enemyType + (enemyCount > 0 ? "s" : "");
+            case ObjectiveType.Survive:
+                return "Survive for " + duration + " seconds";
+            default:
+                return "";
+        }
+    }
 
     public void SetOverrideDifficulty(float amount)
     {

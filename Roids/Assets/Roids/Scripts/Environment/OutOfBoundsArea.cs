@@ -12,7 +12,7 @@ public class OutOfBoundsArea : MonoBehaviour
 
     }
 
-    public void OnTriggerEnter (Collider other)
+    public void OnTriggerStay (Collider other)
     {
         // take the players position relative to this area
         // and then decide where to move player relative to that

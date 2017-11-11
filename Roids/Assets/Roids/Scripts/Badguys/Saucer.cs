@@ -20,9 +20,9 @@ public class Saucer : Badguy
 
     Vector3 lookAtTarget;
 
-    public Saucer() : base (Wave.EnemyType.Saucer)
+    public Saucer() : base (Wave.EnemyType.Shuttle)
     {
-        enemyType = Wave.EnemyType.Saucer;
+        enemyType = Wave.EnemyType.Shuttle;
     }
 
     public void Setup(Vector3 direction, float speed, float health, float size, float skill, List<HealthController> targets, ProjectilePoolManager projectileManager, System.Action<Saucer> onDeath)
@@ -49,12 +49,17 @@ public class Saucer : Badguy
 
     private void SelectNewTarget()
     {
+        List<HealthController> targetsToRemove = new List<HealthController>();
         foreach (HealthController hc in targets)
         {
             if (hc != null && !hc.IsAlive)
             {
-                targets.Remove(hc);
+                targetsToRemove.Add(hc);
             }
+        }
+        foreach (HealthController hc in targetsToRemove)
+        {
+            targets.Remove(hc);
         }
 
         if (targets.Count > 0)

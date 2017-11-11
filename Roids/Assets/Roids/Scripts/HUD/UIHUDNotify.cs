@@ -1,17 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class UIHUDNotifyWaveComplete : MonoBehaviour 
+public class UIHUDNotify : MonoBehaviour 
 {
 	[SerializeField]
 	TMPro.TextMeshProUGUI txtText;
+    [SerializeField]
+    TMPro.TextMeshProUGUI txtHeading;
 
-	float timeSinceOpened = 0;
+    float timeSinceOpened = 0;
 	float duration = 0;
 
-	public void Popup(string text, float duration)
+	public void Popup(string text, string heading, float duration)
 	{
 		txtText.text = text;
+        txtHeading.text = heading;
+
 		timeSinceOpened = 0;
 		this.duration = duration;
 

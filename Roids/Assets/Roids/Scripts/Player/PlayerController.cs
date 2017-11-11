@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System;
 
 [RequireComponent(typeof(Collider))]
 public class PlayerController : BaseObject
@@ -15,6 +14,8 @@ public class PlayerController : BaseObject
     [SerializeField]
     Transform pivotObject;
 
+    // __________________________________________________________________________________________PUBLIC
+
     public Vector3 Velocity
     {
         get
@@ -22,8 +23,6 @@ public class PlayerController : BaseObject
             return velocity;
         }
     }
-    Vector3 velocity;
-    Vector3 acceleration;
 
     // __________________________________________________________________________________________GAME VARIABLES
 
@@ -53,6 +52,9 @@ public class PlayerController : BaseObject
     public float leanPitchMultiplier = 0.2f;
 
     // __________________________________________________________________________________________PRIVATES (heh)
+            
+    Vector3 velocity;
+    Vector3 acceleration;
 
     float rotationAmount = 0;
     float currentThrustAmount = 0;
@@ -151,7 +153,10 @@ public class PlayerController : BaseObject
         }
     }
 
-
+    public void Slowdown()
+    {
+        velocity = Vector3.Lerp(velocity, Vector3.zero, 10 * Time.deltaTime);
+    }
 
 
     void OnTriggerEnter(Collider other)
@@ -182,7 +187,6 @@ public class PlayerController : BaseObject
         if (isHit)
         {
             healthController.Damage(damage);
-            Debug.Log("DAMAGE " + damage);
         }
     }
 }

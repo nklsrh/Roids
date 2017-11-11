@@ -4,13 +4,19 @@ using System.Collections.Generic;
 
 public class UIHUDController : BaseObject 
 {
+    public Canvas canvas;
+
 	public UIHUDHealth health;
 	public UIHUDMission mission;
 	public UIHUDTimer timer;
 
-	public UIHUDNotifyWaveComplete notifyWaveComplete;
+    public UIHUDHealth playerHealthBar;
 
-	private CameraController mainCamera;
+    public UIHUDNotify notifyWaveComplete;
+    public UIHUDNotify notifyDamaged;
+    public UIHUDNotify notifyWarning;
+
+    private CameraController mainCamera;
 	private List<UIHUDHealth> healthBarList;
 
 	public override void Setup(){}
@@ -22,13 +28,32 @@ public class UIHUDController : BaseObject
 		HealthController.onCreated += OnHealthCreated;
 		HealthController.onDestroyed += OnHealthDestroyed;
 
-		gameDirector.onWaveStarted += OnWaveStarted;
-		gameDirector.onWaveComplete += OnWaveComplete;		
+        PlayableArea.onLeavingPlayArea += OnLeavingPlayArea;
+
+        gameDirector.onWaveStarted += OnWaveStarted;
+		gameDirector.onWaveComplete += OnWaveComplete;
+        gameDirector.levelController.onBaseLost += OnBaseLost;		
 
 		mainCamera = cam;
-	}
 
-	public override void Logic()
+        AddHealthBar(gameDirector.player.healthController);
+
+        playerHealthBar.Setup(canvas.GetComponent<RectTransform>(), gameDirector.player.healthController, cam, false);
+
+        gameDirector.player.healthController.onDamage += OnPlayerDamaged;
+
+        notifyDamaged.Disable();
+        notifyWarning.Disable();
+        notifyWaveComplete.Disable();
+    }
+
+
+    private void OnPlayerDamaged(float damage)
+    {
+        notifyDamaged.Popup("Damaged", "Warning", 1f);
+    }
+
+    public override void Logic()
 	{
 
 	}
@@ -37,9 +62,18 @@ public class UIHUDController : BaseObject
 	{
 		AddHealthBar(healthController);
 	}
+
 	void OnHealthDestroyed(HealthController healthController)
 	{
-
+        for (int i = 0; i < healthBarList.Count; i++)
+        {
+            if (healthBarList[i].healthController == healthController)
+            {
+                Destroy(healthBarList[i].gameObject);
+                healthBarList.RemoveAt(i);
+                break;
+            }
+        }
 	}
 	
 	void OnWaveStarted(Wave wave)
@@ -52,28 +86,37 @@ public class UIHUDController : BaseObject
 		}
 
 		mission.Enable();
-		mission.SetText(wave.objective.ToString());
+		mission.SetText(wave.GetObjectiveString());
 
-		notifyWaveComplete.Popup("NEW MISSION: " + wave.objective.ToString(), 1.5f);
+		notifyWaveComplete.Popup(wave.GetObjectiveString(), "NEW MISSION", 1.5f);
 	}
 
 	void OnWaveComplete(Wave wave)
 	{
 		timer.Disable();
-		notifyWaveComplete.Popup("Wave Complete", 1.5f);
+		notifyWaveComplete.Popup("Wave Complete", "", 1.5f);
 	}
-
 
 	void AddHealthBar(HealthController healthController)
 	{
 		if (healthController.isTrackedByUI)
 		{
 			UIHUDHealth h = Instantiate(health);
-			h.Setup(healthController, mainCamera);
+			h.Setup(canvas.GetComponent<RectTransform>(), healthController, mainCamera);
 
 			h.transform.SetParent(health.transform.parent, false);
 			
 			healthBarList.Add(h);
 		}
-	}
+    }
+
+    private void OnLeavingPlayArea()
+    {
+        notifyWarning.Popup("Return to the battle", "Out of bounds", 1.5f);
+    }
+
+    private void OnBaseLost(int basesLost, int totalBases)
+    {
+        notifyWarning.Popup(basesLost + "/" + totalBases + " bases lost!", "Warning", 1.5f);
+    }
 }

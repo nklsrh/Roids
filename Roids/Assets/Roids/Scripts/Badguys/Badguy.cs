@@ -30,7 +30,7 @@ public class Badguy : BaseObject
 
     // __________________________________________________________________________________________PRIVATES (heh)
 
-    protected Wave.EnemyType enemyType = Wave.EnemyType.Stomper;
+    protected Wave.EnemyType enemyType = Wave.EnemyType.Asteroid;
 
     public Wave.EnemyType EnemyType
     {

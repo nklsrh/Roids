@@ -37,6 +37,7 @@ public class GameDirector : BaseObject
     public System.Action<int> onLevelComplete;
     public System.Action<Wave.EnemyType> onSpawnEnemies;
     public System.Action<Wave.EnemyType> onBadguyKilled;
+    public System.Action<int, int> onBaseKilled;
 
     // __________________________________________________________________________________________PRIVATES (heh)
 
@@ -55,10 +56,15 @@ public class GameDirector : BaseObject
     public override void Setup()
     {
         player.Setup();
+        player.healthController.onDeath += OnWaveFailed;
 
         LoadLevelData();
 
-        levelController.Setup(levelData, OnWaveStarted, OnWaveComplete, OnWaveFailed);
+        levelController.Setup(levelData);
+        levelController.onWaveStarted += OnWaveStarted;
+        levelController.onWaveComplete += OnWaveComplete;
+        levelController.onWaveFailed += OnWaveFailed;
+
         asteroidManager.Setup(null, OnBadguyKilled);
         saucerManager.Setup(null, OnBadguyKilled);
         explosionManager.Setup();
@@ -148,7 +154,7 @@ public class GameDirector : BaseObject
                     CalculateForDifficulty(initialAsteroidSpeedStart, initialAsteroidSpeedEnd, wave.Difficulty),
                     wave.Difficulty);
                 break;
-            case Wave.EnemyType.Saucer:
+            case Wave.EnemyType.Shuttle:
                 if (wave.objective == Wave.ObjectiveType.Protect)
                 {
                     saucerManager.SetTargets(SelectProtectionTargets());
@@ -178,6 +184,8 @@ public class GameDirector : BaseObject
     private void OnWaveStarted(Wave wave)
     {
         SpawnEnemies(wave);
+
+        player.healthController.SetInvincible(false);
     }
 
     private void OnWaveComplete()
@@ -188,6 +196,8 @@ public class GameDirector : BaseObject
         {
             onWaveComplete.Invoke(levelController.Wave);
         }
+
+        player.healthController.SetInvincible(true);
     }
 
     private void OnWaveFailed()
@@ -196,6 +206,8 @@ public class GameDirector : BaseObject
         {
             onWaveFailed.Invoke(levelController.Wave);
         }
+
+        player.healthController.SetInvincible(true);
     }
 
     private float CalculateValueForLevel(float valueAtFirstLevel, float valueAtLastLevel)

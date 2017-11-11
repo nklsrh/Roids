@@ -6,9 +6,13 @@ public class UIHUDHealth : MonoBehaviour
 {
 	public Image imgFill;
 
-	Transform tracking;
-	HealthController healthController;
+    [HideInInspector]
+    public HealthController healthController;
+
+    Transform tracking;
 	CameraController trackingCamera;
+    RectTransform canvas;
+    bool trackWorldSpace = true;
 
 	public void Enable()
 	{
@@ -20,27 +24,30 @@ public class UIHUDHealth : MonoBehaviour
 		gameObject.SetActive(false);
 	}
 
-	public void Setup(HealthController healthController, CameraController cam)
+	public void Setup(RectTransform canvas, HealthController healthController, CameraController cam, bool trackWorldSpace = true)
 	{
 		this.healthController = healthController;
 		this.tracking = healthController.transform;
 		this.trackingCamera = cam;
-	}
+        this.canvas = canvas;
+        this.trackWorldSpace = trackWorldSpace;
+    }
 
-	void Update()
-	{
-		if (tracking != null)
+	void LateUpdate()
+    {
+        if (healthController != null)
+        {
+            imgFill.fillAmount = healthController.Health / healthController.HealthMax;
+        }
+
+        if (tracking != null && trackWorldSpace)
 		{
-			if (healthController != null)
-			{
-				imgFill.fillAmount = healthController.Health / healthController.HealthMax;
-			}
-
 			Vector3 trackedPosition = tracking.transform.position;
 			Camera cam = trackingCamera.Camera;
 			Vector3 screenPos = cam.WorldToScreenPoint(trackedPosition);
 
-			transform.position = screenPos;
-		}
+            //transform.position = screenPos;
+            GetComponent<RectTransform>().localPosition = screenPos;
+        }
 	}
 }

@@ -44,21 +44,18 @@ public class LevelController : BaseObject
     int endlessLevelsComplete = 0;
     float overrideEndlessDifficulty = 0f;
 
-    System.Action<Wave> actionWaveStarted;
-    System.Action actionWaveComplete;
-    System.Action actionWaveFailed;
+    public System.Action<Wave> onWaveStarted;
+    public System.Action onWaveComplete;
+    public System.Action onWaveFailed;
+    public System.Action<int, int> onBaseLost;
 
     public override void Setup() { }
 
-    public void Setup(LevelData levelData, System.Action<Wave> actionWaveStarted, System.Action actionWaveComplete, System.Action actionWaveFailed)
+    public void Setup(LevelData levelData)
     {
         this.levelData = levelData;
         waves = levelData.waves;
         endlessLevelsComplete = 0;
-
-        this.actionWaveStarted = actionWaveStarted;
-        this.actionWaveComplete = actionWaveComplete;
-        this.actionWaveFailed = actionWaveFailed;
 
         Setup();
     }
@@ -96,9 +93,9 @@ public class LevelController : BaseObject
 
         Wave.SetOverrideDifficulty(overrideEndlessDifficulty);
 
-        if (actionWaveStarted != null)
+        if (onWaveStarted != null)
         {
-            actionWaveStarted.Invoke(Wave);
+            onWaveStarted.Invoke(Wave);
         }
     }
 
@@ -110,9 +107,9 @@ public class LevelController : BaseObject
     private void FinishWave()
     {
         isWaveActive = false;
-        if (actionWaveComplete != null)
+        if (onWaveComplete != null)
         {
-            actionWaveComplete.Invoke();
+            onWaveComplete.Invoke();
         }
     }
 
@@ -150,9 +147,9 @@ public class LevelController : BaseObject
         else if (IsWaveFailed())
         {
             Debug.Log("WAVE FAILED!");
-            if (actionWaveFailed != null)
+            if (onWaveFailed != null)
             {
-                actionWaveFailed.Invoke();
+                onWaveFailed.Invoke();
             }
         }
 
@@ -201,8 +198,11 @@ public class LevelController : BaseObject
 
     private void OnBaseLost(ProtectBase protectBase)
     {
-        Debug.Log("BASE LOST!");
         basesLost++;
+        if (onBaseLost != null)
+        {
+            onBaseLost.Invoke(basesLost, Wave.objectiveRequiredValue);
+        }
     }
 
     private bool IsWaveComplete()

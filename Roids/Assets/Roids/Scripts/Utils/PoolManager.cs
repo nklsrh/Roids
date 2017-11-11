@@ -101,6 +101,7 @@ public class PoolManager
         {
             objectList[i].gameObject.SetActive(false);
             DisableObject(objectList[i]);
+            lastUsedObject = 0;
         }
     }
 

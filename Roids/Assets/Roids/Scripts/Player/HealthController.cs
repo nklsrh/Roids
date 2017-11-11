@@ -31,6 +31,7 @@ public class HealthController : BaseObject
     public static System.Action<HealthController> onCreated;
     public static System.Action<HealthController> onDestroyed;
 
+    private bool isInvincible = false;
 
     public override void Setup() { }
 
@@ -48,6 +49,11 @@ public class HealthController : BaseObject
 
     public void Damage(float amount)
     {
+        if (isInvincible)
+        {
+            return;
+        }
+
         Health -= amount;
 
         if (onDamage != null)
@@ -89,4 +95,10 @@ public class HealthController : BaseObject
     {
 
     }
+
+    public void SetInvincible(bool isInvincible)
+    {
+        this.isInvincible = isInvincible;
+    }
+
 }
