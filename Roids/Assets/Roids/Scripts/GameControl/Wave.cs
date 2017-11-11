@@ -6,7 +6,6 @@ public class Wave
 {
     public enum ObjectiveType
     {
-        None,
         KillAll,
         Protect,
         Rebuild,
@@ -21,12 +20,13 @@ public class Wave
         Stomper
     }
 
-    public ObjectiveType objective;
-    public EnemyType enemyType;
-    public int enemyCount = 1;
-    public float difficulty = 0.0f;
-    public float duration = -1;
-    public int objectiveRequiredValue = 0;
+    public float Difficulty
+    {
+        get
+        {
+            return overrideDifficulty > 0 ? overrideDifficulty : difficulty;
+        }
+    }
 
     public bool IsTimeBased
     {
@@ -34,5 +34,18 @@ public class Wave
         {
             return duration > 0;
         }
+    }
+
+    public ObjectiveType objective;
+    public EnemyType enemyType;
+    public int enemyCount = 1;
+    public float difficulty = 0.0f;
+    public float duration = -1;
+    public int objectiveRequiredValue = 0;
+    private float overrideDifficulty = 0;
+
+    public void SetOverrideDifficulty(float amount)
+    {
+        overrideDifficulty = amount;
     }
 }

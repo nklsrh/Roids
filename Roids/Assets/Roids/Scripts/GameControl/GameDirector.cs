@@ -10,6 +10,7 @@ public class GameDirector : BaseObject
     public SaucerManager saucerManager;
     public ExplosionManager explosionManager;
     public LevelController levelController;
+    public string levelName = "Level_1_Endless";
 
     // __________________________________________________________________________________________GAME VARIABLES
 
@@ -38,6 +39,8 @@ public class GameDirector : BaseObject
 
     // __________________________________________________________________________________________PRIVATES (heh)
 
+    LevelData levelData;
+
     int currentLevel = 0;
 
     float timeSinceLevelStarted = 0;
@@ -51,10 +54,18 @@ public class GameDirector : BaseObject
     public override void Setup()
     {
         player.Setup();
-        levelController.Setup(OnWaveStarted, OnWaveComplete);
+
+        LoadLevelData();
+
+        levelController.Setup(levelData, OnWaveStarted, OnWaveComplete);
         asteroidManager.Setup(null, ClearEnemies);
         saucerManager.Setup(null, ClearEnemies);
         explosionManager.Setup();
+    }
+
+    private void LoadLevelData()
+    {
+        levelData = Instantiate(Resources.Load<LevelData>(System.IO.Path.Combine("LevelData", levelName)));
     }
 
     public override void Logic()
@@ -110,7 +121,11 @@ public class GameDirector : BaseObject
 
         timeSinceLevelStarted = 0;
         currentLevel++;
-        levelController.RestartWaves();
+
+        if (levelController.IsEndless)
+        {
+            levelController.RestartWaves();
+        }
     }
 
     private void SpawnEnemies(Wave wave)
@@ -124,13 +139,13 @@ public class GameDirector : BaseObject
         {
             case Wave.EnemyType.Asteroid:
                 asteroidManager.SpawnNewSet(wave.enemyCount, 
-                    CalculateForDifficulty(maxAsteroidSizeStart, maxAsteroidSizeEnd, wave.difficulty), 
-                    CalculateForDifficulty(initialAsteroidSpeedStart, initialAsteroidSpeedEnd, wave.difficulty));
+                    CalculateForDifficulty(maxAsteroidSizeStart, maxAsteroidSizeEnd, wave.Difficulty), 
+                    CalculateForDifficulty(initialAsteroidSpeedStart, initialAsteroidSpeedEnd, wave.Difficulty));
                 break;
             case Wave.EnemyType.Saucer:
                 saucerManager.SpawnNewSet(wave.enemyCount,
                     2f,
-                    CalculateForDifficulty(saucerSpeedStart, saucerSpeedEnd, wave.difficulty));
+                    CalculateForDifficulty(saucerSpeedStart, saucerSpeedEnd, wave.Difficulty));
                 break;
         }
     }

@@ -4,8 +4,15 @@ using System.Collections.Generic;
 
 public class LevelController : BaseObject
 {
-    public Wave[] waves;
     public ProtectBase[] protectBases;
+
+    public bool IsEndless
+    {
+        get
+        {
+            return levelData.isEndless;
+        }
+    }
 
     public Wave Wave
     {
@@ -18,6 +25,9 @@ public class LevelController : BaseObject
             return wave;
         }
     }
+    private Wave[] waves;
+
+    LevelData levelData;
 
     Wave wave;
     int currentWave = 0;
@@ -26,13 +36,20 @@ public class LevelController : BaseObject
     bool isWaveActive = false;
     int basesLost = 0;
 
+    int endlessLevelsComplete = 0;
+    float overrideEndlessDifficulty = 0f;
+
     System.Action<Wave> actionWaveStarted;
     System.Action actionWaveComplete;
 
     public override void Setup() { }
 
-    public void Setup(System.Action<Wave> actionWaveStarted, System.Action actionWaveComplete)
+    public void Setup(LevelData levelData, System.Action<Wave> actionWaveStarted, System.Action actionWaveComplete)
     {
+        this.levelData = levelData;
+        waves = levelData.waves;
+        endlessLevelsComplete = 0;
+
         this.actionWaveStarted = actionWaveStarted;
         this.actionWaveComplete = actionWaveComplete;
 
@@ -68,10 +85,20 @@ public class LevelController : BaseObject
 
         SetupProtectBases();
 
+        CalculateEndlessDifficulty();
+
+        Wave.SetOverrideDifficulty(overrideEndlessDifficulty);
+
         if (actionWaveStarted != null)
         {
             actionWaveStarted.Invoke(Wave);
         }
+    }
+
+    private void CalculateEndlessDifficulty()
+    {
+        overrideEndlessDifficulty = Mathf.Min(endlessLevelsComplete * 0.5f + (currentWave * 0.15f), 6.0f);
+        Debug.Log("OVERRIDE ENDLESS DIFFICULTY: " + overrideEndlessDifficulty + " : " + currentWave + " : " + endlessLevelsComplete);
     }
 
     private void FinishWave()
@@ -92,6 +119,7 @@ public class LevelController : BaseObject
     public void RestartWaves()
     {
         currentWave = 0;
+        endlessLevelsComplete++;
     }
 
     public void BadguyCleared(Badguy badguy)
@@ -165,8 +193,6 @@ public class LevelController : BaseObject
     {
         switch (Wave.objective)
         {
-            case Wave.ObjectiveType.None:
-                return (Wave.duration < currentWaveTime);
             case Wave.ObjectiveType.KillAll:
                 return (enemiesKilled >= Wave.enemyCount);
             case Wave.ObjectiveType.Survive:
