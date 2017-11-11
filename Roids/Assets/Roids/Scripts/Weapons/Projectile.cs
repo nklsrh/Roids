@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Projectile : BaseObject
 {
@@ -14,6 +15,8 @@ public class Projectile : BaseObject
 
     public float damage;
 
+    public List<AudioSource> audioBlastOptions;
+
     protected System.Action<Projectile> onDeath;
 
     public override void Setup()
@@ -25,6 +28,8 @@ public class Projectile : BaseObject
     public virtual void SetupProjectile(System.Action<Projectile> onDeath)
     {
         this.onDeath = onDeath;
+
+        PlayRandomBlastSound();
     }
 
     public override void Logic()
@@ -49,5 +54,14 @@ public class Projectile : BaseObject
         {
             onDeath.Invoke(this);
         }
+    }
+
+    private void PlayRandomBlastSound()
+    {
+        for (int i = 0; i < audioBlastOptions.Count; i++)
+        {
+            audioBlastOptions[i].gameObject.SetActive(false);
+        }
+        audioBlastOptions[Random.Range(0, audioBlastOptions.Count)].gameObject.SetActive(true);
     }
 }

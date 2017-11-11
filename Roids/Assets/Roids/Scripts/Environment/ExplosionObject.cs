@@ -6,6 +6,9 @@ public class ExplosionObject : BaseObject
     [SerializeField]
     ParticleSystem[] particleSystems;
 
+    [SerializeField]
+    AudioSource audioExplosion;
+
     public override void Setup()
     {
         gameObject.SetActive(true);
@@ -13,6 +16,8 @@ public class ExplosionObject : BaseObject
         {
             particleSystems[i].Play();
         }
+
+        audioExplosion.Play();
     }
 
     public override void Logic()

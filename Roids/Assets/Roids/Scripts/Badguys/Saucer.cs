@@ -7,7 +7,7 @@ public class Saucer : Badguy
 {
     [SerializeField]
     WeaponController weaponController;
-
+    
     public float fireSpeedBase = 5.0f;
     public float fireSpeedMax = 10.0f;
 

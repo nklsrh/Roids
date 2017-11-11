@@ -42,10 +42,15 @@ public class MainGameplayController : MonoBehaviour
 
         uiController.Setup(gameDirector, cameraController);
 
-		//cameraController.Setup(gameDirector.player);
         SelectCamera(0);
 
         gameDirector.StartWave();
+
+        if (Boombox.Instance != null)
+        {
+            Boombox.Instance.PlayGameplayMusic();
+            Boombox.Instance.PlayGameplayAmbience();
+        }
 
         SwitchState(GameState.Gameplay);
     }

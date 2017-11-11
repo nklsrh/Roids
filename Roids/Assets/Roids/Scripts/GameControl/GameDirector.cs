@@ -11,6 +11,7 @@ public class GameDirector : BaseObject
     public SaucerManager saucerManager;
     public ExplosionManager explosionManager;
     public LevelController levelController;
+    public GameplaySFXController gameplaySFXController;
     public string levelName = "Level_1_Endless";
 
     // __________________________________________________________________________________________GAME VARIABLES
@@ -137,6 +138,8 @@ public class GameDirector : BaseObject
         {
             levelController.RestartWaves();
         }
+
+        gameplaySFXController.PlayAchievement();
     }
 
     private void SpawnEnemies(Wave wave)
@@ -198,6 +201,7 @@ public class GameDirector : BaseObject
         }
 
         player.healthController.SetInvincible(true);
+        gameplaySFXController.PlayAchievement();
     }
 
     private void OnWaveFailed()
@@ -227,6 +231,11 @@ public class GameDirector : BaseObject
         return targets;
     }
 
+
+
+
+
+    // __________________________________________________________________________________________STATICS
 
     private static ExplosionManager ExplosionManagerStatic;
     public static ExplosionObject Explosion(Vector3 position, float scale)

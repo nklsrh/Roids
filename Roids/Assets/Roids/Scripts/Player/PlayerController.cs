@@ -14,6 +14,9 @@ public class PlayerController : BaseObject
     [SerializeField]
     Transform pivotObject;
 
+    [SerializeField]
+    ParticleSystem thrusterParticleSystem;
+
     // __________________________________________________________________________________________PUBLIC
 
     public Vector3 Velocity
@@ -117,6 +120,7 @@ public class PlayerController : BaseObject
 
         pivotObject.localRotation = Quaternion.Slerp(pivotObject.localRotation, pivotRotation, leanLerp * Time.deltaTime);
 
+        thrusterParticleSystem.startSize = currentThrustAmount * 0.2f;
 
         currentThrustAmount = 0;
     }
