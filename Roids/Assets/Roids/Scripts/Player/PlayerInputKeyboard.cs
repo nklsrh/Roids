@@ -9,7 +9,7 @@ public class PlayerInputKeyboard : PlayerInput
         float turn = Input.GetAxis("Horizontal");
         playerController.Turn(turn);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetButton("Fire"))
         {
             playerController.Fire();
         }

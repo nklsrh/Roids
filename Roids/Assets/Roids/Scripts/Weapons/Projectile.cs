@@ -8,7 +8,8 @@ public class Projectile : BaseObject
         get;
         protected set;
     }
-    protected float lifetime = 1.0f;
+
+    public float lifetime = 1.0f;
 
     public float damage;
 

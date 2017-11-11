@@ -12,12 +12,12 @@ public class AsteroidManager : BadguyManager
 
     public float[] asteroidSizesByHealth;
 
-    public override void SpawnNewSet(int count, float maxSize, float baseSpeed)
+    public override void SpawnNewSet(int count, float maxSize, float baseSpeed, float skill)
     {
         for (int i = 0; i < count; i++)
         {
             Asteroid a = GetNewBadguy() as Asteroid;
-            a.transform.position = new Vector3(Random.Range(-3, 3), 0, Random.Range(-3, 3));
+            a.transform.position = Vector3.Scale(Random.onUnitSphere * 10, new Vector3(1, 0, 1));// new Vector3(Random.Range(-3, 3), 0, Random.Range(-3, 3));
 
             Vector3 randomDir = GetRandomDirection();
             float randomSpeed = baseSpeed * Random.Range(minInitialAsteroidSpeed, maxInitialAsteroidSpeed);

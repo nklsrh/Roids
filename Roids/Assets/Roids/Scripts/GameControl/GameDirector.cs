@@ -140,12 +140,15 @@ public class GameDirector : BaseObject
             case Wave.EnemyType.Asteroid:
                 asteroidManager.SpawnNewSet(wave.enemyCount, 
                     CalculateForDifficulty(maxAsteroidSizeStart, maxAsteroidSizeEnd, wave.Difficulty), 
-                    CalculateForDifficulty(initialAsteroidSpeedStart, initialAsteroidSpeedEnd, wave.Difficulty));
+                    CalculateForDifficulty(initialAsteroidSpeedStart, initialAsteroidSpeedEnd, wave.Difficulty),
+                    wave.Difficulty);
                 break;
             case Wave.EnemyType.Saucer:
+                saucerManager.SetTargets(new Transform[] { player.transform });
                 saucerManager.SpawnNewSet(wave.enemyCount,
                     2f,
-                    CalculateForDifficulty(saucerSpeedStart, saucerSpeedEnd, wave.Difficulty));
+                    CalculateForDifficulty(saucerSpeedStart, saucerSpeedEnd, wave.Difficulty),
+                    wave.Difficulty);
                 break;
         }
     }

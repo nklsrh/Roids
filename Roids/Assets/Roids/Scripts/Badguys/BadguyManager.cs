@@ -27,7 +27,7 @@ public class BadguyManager : BaseObject
         Setup();
     }
 
-    public virtual void SpawnNewSet(int count, float maxSize, float baseSpeed)
+    public virtual void SpawnNewSet(int count, float maxSize, float baseSpeed, float skill)
     {
         // stub
     }

@@ -44,6 +44,9 @@ public class PlayerController : BaseObject
     public float maximumVelocityMagnitude = 10.0f;
     public float maximumAccelerationMagnitude = 1.0f;
 
+    [Header("Weapon")]
+    public float fireSpeed = 25.0f;
+
     [Header("Visuals")]
     public float leanLerp = 5.0f;
     public float leanRollMultiplier = 0.2f;
@@ -142,7 +145,10 @@ public class PlayerController : BaseObject
 
     public void Fire()
     {
-        weaponController.Fire(transform.forward, 25);
+        if (weaponController.IsReady)
+        {
+            weaponController.Fire(transform.forward, fireSpeed);
+        }
     }
 
 
