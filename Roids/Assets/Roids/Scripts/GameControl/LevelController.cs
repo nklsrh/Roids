@@ -26,6 +26,11 @@ public class LevelController : BaseObject
         }
     }
 
+    public int Score
+    {
+        get; private set;
+    }
+
     public ProtectBase[] ActiveProtectBases
     {
         get; private set;
@@ -48,6 +53,18 @@ public class LevelController : BaseObject
     public System.Action onWaveComplete;
     public System.Action onWaveFailed;
     public System.Action<int, int> onBaseLost;
+    public System.Action<int, string, int> onScoreAdded;
+
+    const int SCORE_ASTEROIDHIT_1 = 50;
+    const int SCORE_ASTEROIDHIT_2 = 30;
+    const int SCORE_ASTEROIDHIT_3 = 10;
+
+    const int SCORE_WAVE_KILLENEMY = 100;
+    const int SCORE_WAVE_PROTECTEDBASE = 100;
+    const int SCORE_WAVE_COMPLETE = 100;
+
+    const int SCORE_LEVEL_COMPLETE = 1000;
+
 
     public override void Setup() { }
 
@@ -114,6 +131,8 @@ public class LevelController : BaseObject
         {
             onWaveComplete.Invoke();
         }
+
+        AddScore(SCORE_WAVE_COMPLETE, "Completed Wave");
     }
 
     public void NextWave()
@@ -126,6 +145,8 @@ public class LevelController : BaseObject
     {
         currentWave = 0;
         endlessLevelsComplete++;
+
+        AddScore(SCORE_LEVEL_COMPLETE, "Leveled Up!");
     }
 
     public void BadguyCleared(Badguy badguy)
@@ -133,6 +154,25 @@ public class LevelController : BaseObject
         if (badguy.EnemyType == Wave.enemyType)
         {
             enemiesKilled++;
+
+            AddScore(SCORE_WAVE_KILLENEMY, "Killed Enemy");
+        }
+
+        if (badguy.EnemyType == Wave.EnemyType.Asteroid)
+        {
+            Asteroid ab = badguy as Asteroid;
+            if (ab.ChunksRemaining == 3)
+            {
+                AddScore(SCORE_ASTEROIDHIT_3, "Asteroid destroyed");
+            }
+            else if (ab.ChunksRemaining == 2)
+            {
+                AddScore(SCORE_ASTEROIDHIT_2, "Asteroid crushed");
+            }
+            else if (ab.ChunksRemaining == 1)
+            {
+                AddScore(SCORE_ASTEROIDHIT_1, "Asteroid exploded");
+            }
         }
     }
 
@@ -149,7 +189,6 @@ public class LevelController : BaseObject
         }
         else if (IsWaveFailed())
         {
-            Debug.Log("WAVE FAILED!");
             if (onWaveFailed != null)
             {
                 onWaveFailed.Invoke();
@@ -217,7 +256,14 @@ public class LevelController : BaseObject
             case Wave.ObjectiveType.Survive:
                 return (currentWaveTime >= Wave.duration);
             case Wave.ObjectiveType.Protect:
-                return (currentWaveTime >= Wave.duration && basesLost < Wave.objectiveRequiredValue);
+                bool result = (currentWaveTime >= Wave.duration && basesLost < Wave.objectiveRequiredValue);
+                if (result)
+                {
+                    int basesProtected = (Wave.objectiveRequiredValue - basesLost);
+                    AddScore(SCORE_WAVE_PROTECTEDBASE * basesProtected, "Protected " + basesProtected + " bases");
+                    return true;
+                }
+                break;
         }
         return false;
     }
@@ -231,4 +277,14 @@ public class LevelController : BaseObject
         }
         return false;
     }
+
+    private void AddScore(int score, string reason)
+    {
+        Score += score; 
+        if (onScoreAdded != null)
+        {
+            onScoreAdded.Invoke(score, reason, Score);
+        }
+    }
+
 }

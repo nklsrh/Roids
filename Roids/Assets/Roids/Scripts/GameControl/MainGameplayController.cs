@@ -1,25 +1,34 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MainGameplayController : MonoBehaviour {
+public class MainGameplayController : MonoBehaviour
+{
 	public UIHUDController uiController;
 	public GameDirector gameDirector;
 	public CameraController cameraController;
+    public PostGameController postgameController;
 
     public enum GameState
     {
+        None,
         Pregame,
         Gameplay,
         Paused,
-        Postgame
+        Postgame,
     }
     GameState currentState;
 
     System.Action currentLoop;
     System.Action currentLateLoop;
 
+    float currentStateTime = 0.0f;
+
+    const float TIME_WAIT_BEFORE_GAME_END = 3.0f;
+
     void Start ()
     {
+        postgameController.Disable();
+
         SwitchState(GameState.Pregame);
 
         gameDirector.Setup();
@@ -52,9 +61,11 @@ public class MainGameplayController : MonoBehaviour {
                     break;
                 case GameState.Postgame:
                     currentLoop = PostgameLoop;
+                    currentLateLoop = PostgameLateLoop;
                     break;
             }
 
+            currentStateTime = 0;
             currentState = newState;
         }
     }
@@ -77,7 +88,30 @@ public class MainGameplayController : MonoBehaviour {
 
     void PostgameLoop()
     {
+        if (currentStateTime > TIME_WAIT_BEFORE_GAME_END)
+        {
+            SwitchState(GameState.None);
+        }
+        else
+        {
+            if (!postgameController.IsSetup)
+            {
+                uiController.HideHUD();
+                postgameController.Setup(gameDirector.levelController.Score);
+            }
+            //MainGameplayLoop();
+        }
+    }
 
+    void PostgameLateLoop()
+    {
+        if (currentStateTime > TIME_WAIT_BEFORE_GAME_END)
+        {
+        }
+        else
+        {
+            //cameraController.Logic();
+        }
     }
 
     private void OnGameOver(Wave wave)
@@ -92,6 +126,13 @@ public class MainGameplayController : MonoBehaviour {
         if (currentLoop != null)
         {
             currentLoop.Invoke();
+        }
+        currentStateTime += Time.deltaTime;
+
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            OnGameOver(gameDirector.levelController.Wave);
         }
     }
 

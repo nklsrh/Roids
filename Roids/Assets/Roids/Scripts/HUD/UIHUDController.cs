@@ -5,16 +5,19 @@ using System.Collections.Generic;
 public class UIHUDController : BaseObject 
 {
     public Canvas canvas;
+    public RectTransform hud;
 
 	public UIHUDHealth health;
 	public UIHUDMission mission;
-	public UIHUDTimer timer;
+	public UIHUDMission scoreboard;
+    public UIHUDTimer timer;
 
     public UIHUDHealth playerHealthBar;
 
     public UIHUDNotify notifyWaveComplete;
     public UIHUDNotify notifyDamaged;
     public UIHUDNotify notifyWarning;
+    public UIHUDNotify notifyScoreTicker;
 
     private CameraController mainCamera;
 	private List<UIHUDHealth> healthBarList;
@@ -32,21 +35,36 @@ public class UIHUDController : BaseObject
 
         gameDirector.onWaveStarted += OnWaveStarted;
 		gameDirector.onWaveComplete += OnWaveComplete;
-        gameDirector.levelController.onBaseLost += OnBaseLost;		
+        gameDirector.levelController.onBaseLost += OnBaseLost;
+        gameDirector.levelController.onScoreAdded += OnScoreAdded;
 
 		mainCamera = cam;
 
-        AddHealthBar(gameDirector.player.healthController);
-
-        //playerHealthBar.Setup(canvas.GetComponent<RectTransform>(), gameDirector.player.healthController, cam, false);
+        playerHealthBar.Setup(canvas.GetComponent<RectTransform>(), gameDirector.player.healthController, cam, false);
 
         gameDirector.player.healthController.onDamage += OnPlayerDamaged;
 
         notifyDamaged.Disable();
         notifyWarning.Disable();
         notifyWaveComplete.Disable();
+        notifyScoreTicker.Disable();
+
+        scoreboard.Disable();
     }
 
+    void OnDestroy()
+    {
+        HealthController.onCreated -= OnHealthCreated;
+        HealthController.onDestroyed -= OnHealthDestroyed;
+        PlayableArea.onLeavingPlayArea -= OnLeavingPlayArea;
+    }
+
+    private void OnScoreAdded(int score, string reason, int totalScore)
+    {
+        notifyScoreTicker.Popup("+" + score.ToString("#,##0"), reason, 1.2f);
+        this.scoreboard.SetText(totalScore.ToString("#,##0"));
+        this.scoreboard.Enable();
+    }
 
     private void OnPlayerDamaged(float damage)
     {
@@ -55,8 +73,7 @@ public class UIHUDController : BaseObject
 
     public override void Logic()
 	{
-
-	}
+    }
 
 	void OnHealthCreated(HealthController healthController)
 	{
@@ -75,8 +92,17 @@ public class UIHUDController : BaseObject
             }
         }
 	}
-	
-	void OnWaveStarted(Wave wave)
+
+    public void ShowHUD()
+    {
+        hud.gameObject.SetActive(true);
+    }
+    public void HideHUD()
+    {
+        hud.gameObject.SetActive(false);
+    }
+
+    void OnWaveStarted(Wave wave)
 	{
 		timer.Disable();
 		if (wave.IsTimeBased)

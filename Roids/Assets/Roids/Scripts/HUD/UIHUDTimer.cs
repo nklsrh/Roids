@@ -7,7 +7,10 @@ public class UIHUDTimer : MonoBehaviour
 	[SerializeField]
 	Image imgTimeFill;
 
-	float duration;
+    [SerializeField]
+    TMPro.TextMeshProUGUI txtTimer;
+
+    float duration;
 	float currentTime;
 
 	public void Enable()
@@ -31,9 +34,12 @@ public class UIHUDTimer : MonoBehaviour
 		if (currentTime > 0)
 		{
 			currentTime -= Time.deltaTime;
+
 			imgTimeFill.fillAmount = currentTime / duration;
 
-			if (currentTime <= 0)
+            txtTimer.text = currentTime.ToString("0.0");
+
+            if (currentTime <= 0)
 			{
 				Disable();
 			}
