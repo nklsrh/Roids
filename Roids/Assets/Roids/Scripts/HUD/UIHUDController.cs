@@ -19,6 +19,8 @@ public class UIHUDController : BaseObject
     public UIHUDNotify notifyWarning;
     public UIHUDNotify notifyScoreTicker;
 
+    public Animation animationWipe;
+
     private CameraController mainCamera;
 	private List<UIHUDHealth> healthBarList;
 
@@ -50,6 +52,8 @@ public class UIHUDController : BaseObject
         notifyScoreTicker.Disable();
 
         scoreboard.Disable();
+
+        animationWipe.Play();
     }
 
     void OnDestroy()
