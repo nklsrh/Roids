@@ -40,6 +40,6 @@ public class Asteroid : Badguy
     {
         base.Logic();
 
-        transform.Rotate(Speed * Speed * Random.onUnitSphere * rotationMultiplier + Speed * Speed * Quaternion.LookRotation(Direction).eulerAngles * rotationMultiplier * Time.deltaTime, Space.Self);
+        transform.Rotate(Speed * Speed * Random.onUnitSphere * rotationMultiplier + Speed * Quaternion.LookRotation(Direction).eulerAngles * rotationMultiplier * Time.deltaTime, Space.Self);
     }
 }

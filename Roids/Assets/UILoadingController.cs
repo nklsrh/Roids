@@ -4,8 +4,8 @@ using System.Collections;
 public class UILoadingController : MonoBehaviour
 {
     public string sceneName = "scene_menu";
-
     public float duration = 5f;
+
     float timeLeft = 0;
 
 	void Start ()
