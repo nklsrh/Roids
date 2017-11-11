@@ -95,5 +95,11 @@ public class Badguy : BaseObject
                 onHit.Invoke(this);
             }
         }
+
+        PlayerController player = collider.gameObject.GetComponent<PlayerController>();
+        if (player != null)
+        {
+            player.healthController.Damage(20);
+        }
     }
 }

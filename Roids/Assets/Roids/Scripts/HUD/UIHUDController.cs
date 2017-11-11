@@ -77,7 +77,7 @@ public class UIHUDController : BaseObject
 
 	void OnHealthCreated(HealthController healthController)
 	{
-		AddHealthBar(healthController);
+		//AddHealthBar(healthController);
 	}
 
 	void OnHealthDestroyed(HealthController healthController)
