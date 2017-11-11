@@ -26,6 +26,7 @@ public class CameraController : BaseObject
     }
     Camera thisCamera;
 
+    Transform targetTransform;
     PlayerController targetPlayer;
 
     Vector3 movementPosition;
@@ -35,9 +36,17 @@ public class CameraController : BaseObject
     {
     }
 
+    public void Setup(Transform otherTarget)
+    {
+        this.targetTransform = otherTarget;
+        this.targetPlayer = null;
+    }
+
     public void Setup(PlayerController player)
     {
         this.targetPlayer = player;
+        this.targetTransform = player.transform;
+
         lookAtPosition = player.transform.position;
     }
 
@@ -50,9 +59,9 @@ public class CameraController : BaseObject
             transform.LookAt(lookAtPosition);
         }
 
-        Vector3 wantedPosition = useLocalOffset ? targetPlayer.transform.TransformPoint(offset) : targetPlayer.transform.position + offset;
+        Vector3 wantedPosition = useLocalOffset ? targetTransform.TransformPoint(offset) : targetTransform.position + offset;
         movementPosition = Vector3.Slerp(movementPosition, wantedPosition, moveLerp * Time.deltaTime);
-        lookAtPosition = Vector3.Slerp(lookAtPosition, targetPlayer.transform.position + (targetPlayer.transform.forward * lookForward) + (targetPlayer.Velocity * lookUsingVelocity), lookLerp * Time.deltaTime);
+        lookAtPosition = Vector3.Slerp(lookAtPosition, targetTransform.position + (targetTransform.forward * lookForward) + ((targetPlayer != null ? targetPlayer.Velocity : Vector3.zero) * lookUsingVelocity), lookLerp * Time.deltaTime);
     }
 
 }

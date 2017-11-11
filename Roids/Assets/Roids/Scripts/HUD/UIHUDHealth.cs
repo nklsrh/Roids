@@ -33,7 +33,7 @@ public class UIHUDHealth : MonoBehaviour
         this.trackWorldSpace = trackWorldSpace;
     }
 
-	void LateUpdate()
+    void LateUpdate()
     {
         if (healthController != null)
         {
@@ -41,13 +41,17 @@ public class UIHUDHealth : MonoBehaviour
         }
 
         if (tracking != null && trackWorldSpace)
-		{
-			Vector3 trackedPosition = tracking.transform.position;
-			Camera cam = trackingCamera.Camera;
-			Vector3 screenPos = cam.WorldToScreenPoint(trackedPosition);
-
-            //transform.position = screenPos;
-            GetComponent<RectTransform>().localPosition = screenPos;
+        {
+            TrackTargetWorldSpace();
         }
-	}
+    }
+
+    void TrackTargetWorldSpace()
+    {
+        Vector3 trackedPosition = tracking.transform.position;
+        Camera cam = trackingCamera.Camera;
+        Vector3 screenPos = cam.WorldToScreenPoint(trackedPosition);
+
+        GetComponent<RectTransform>().localPosition = screenPos;
+    }
 }

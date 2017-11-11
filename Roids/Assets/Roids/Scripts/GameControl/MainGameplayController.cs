@@ -23,7 +23,7 @@ public class MainGameplayController : MonoBehaviour
 
     float currentStateTime = 0.0f;
 
-    const float TIME_WAIT_BEFORE_GAME_END = 3.0f;
+    const float TIME_WAIT_BEFORE_GAME_END = 1.0f;
 
     void Start ()
     {
@@ -90,16 +90,18 @@ public class MainGameplayController : MonoBehaviour
     {
         if (currentStateTime > TIME_WAIT_BEFORE_GAME_END)
         {
-            SwitchState(GameState.None);
-        }
-        else
-        {
+            Time.timeScale = 1f;
             if (!postgameController.IsSetup)
             {
                 uiController.HideHUD();
                 postgameController.Setup(gameDirector.levelController.Score);
             }
-            //MainGameplayLoop();
+            SwitchState(GameState.None);
+        }
+        else
+        {
+            Time.timeScale = 0.3f;
+            MainGameplayLoop();
         }
     }
 
@@ -110,12 +112,17 @@ public class MainGameplayController : MonoBehaviour
         }
         else
         {
-            //cameraController.Logic();
+            cameraController.Logic();
         }
     }
 
     private void OnGameOver(Wave wave)
     {
+        ExplosionObject explosion = GameDirector.Explosion(gameDirector.player.transform.position, 1.0f);
+
+        cameraController.Setup(explosion.transform);
+        cameraController.offset += Vector3.right * 10 + Vector3.up * 8;
+
         SwitchState(GameState.Postgame);
     }
 

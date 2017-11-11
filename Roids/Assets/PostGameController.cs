@@ -12,7 +12,7 @@ public class PostGameController : MonoBehaviour
 
     public void Setup(int score)
     {
-        txtScore.text = score.ToString("##,##0");
+        txtScore.text = "SCORE: " + score.ToString("##,##0");
 
         IsSetup = true;
 

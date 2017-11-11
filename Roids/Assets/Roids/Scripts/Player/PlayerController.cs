@@ -187,6 +187,7 @@ public class PlayerController : BaseObject
         if (isHit)
         {
             healthController.Damage(damage);
+            GameDirector.Explosion(transform.position, 0.2f);
         }
     }
 }

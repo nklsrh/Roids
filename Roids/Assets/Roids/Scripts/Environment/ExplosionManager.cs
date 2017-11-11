@@ -20,7 +20,7 @@ public class ExplosionManager : BaseObject
     {
     }
 
-    public void CreateExplosion(Vector3 position, float scale)
+    public ExplosionObject CreateExplosion(Vector3 position, float scale)
     {
         ExplosionObject explosion = poolManager.AddObject(templateObject) as ExplosionObject;
 
@@ -33,5 +33,6 @@ public class ExplosionManager : BaseObject
         }
 
         explosion.Setup();
+        return explosion;
     }
 }

@@ -4,6 +4,10 @@ using System.Collections;
 [RequireComponent(typeof(Collider))]
 public class Badguy : BaseObject
 {
+    // __________________________________________________________________________________________EDITOR
+
+    public float damagePlayerWhenCollide = 20.0f;
+
     // __________________________________________________________________________________________PUBLICS
 
     public Vector3 Direction
@@ -27,6 +31,7 @@ public class Badguy : BaseObject
     {
         get; protected set;
     }
+
 
     // __________________________________________________________________________________________PRIVATES (heh)
 
@@ -99,7 +104,8 @@ public class Badguy : BaseObject
         PlayerController player = collider.gameObject.GetComponent<PlayerController>();
         if (player != null)
         {
-            player.healthController.Damage(20);
+            player.healthController.Damage(damagePlayerWhenCollide);
+            healthController.Damage(damagePlayerWhenCollide);
         }
     }
 }

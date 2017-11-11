@@ -229,12 +229,13 @@ public class GameDirector : BaseObject
 
 
     private static ExplosionManager ExplosionManagerStatic;
-    public static void Explosion(Vector3 position, float scale)
+    public static ExplosionObject Explosion(Vector3 position, float scale)
     {
         if (ExplosionManagerStatic != null)
         {
-            ExplosionManagerStatic.CreateExplosion(position, scale);
+            return ExplosionManagerStatic.CreateExplosion(position, scale);
         }
+        return null;
     }
 
     /// <summary>
