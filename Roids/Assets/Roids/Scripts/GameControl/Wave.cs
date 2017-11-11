@@ -6,16 +6,15 @@ public class Wave
 {
     public enum ObjectiveType
     {
-        KillAll,
-        Protect,
-        Rebuild,
-        Survive
+        KillAll = 0,
+        Protect = 1,
+        Survive = 3,
     }
 
     public enum EnemyType
     {
         Asteroid = 0,
-        Shuttle = 1,
+        Droid = 1,
     }
 
     public float Difficulty
@@ -49,7 +48,7 @@ public class Wave
             case ObjectiveType.Protect:
                 return "Protect " + objectiveRequiredValue + " bases";
             case ObjectiveType.KillAll:
-                return "Destroy " + enemyCount + " " + enemyType + (enemyCount > 0 ? "s" : "");
+                return "Destroy " + enemyCount + " " + enemyType + (enemyCount > 1 ? "s" : "");
             case ObjectiveType.Survive:
                 return "Survive for " + duration + " seconds";
             default:

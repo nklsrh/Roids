@@ -38,7 +38,7 @@ public class UIHUDController : BaseObject
 
         AddHealthBar(gameDirector.player.healthController);
 
-        playerHealthBar.Setup(canvas.GetComponent<RectTransform>(), gameDirector.player.healthController, cam, false);
+        //playerHealthBar.Setup(canvas.GetComponent<RectTransform>(), gameDirector.player.healthController, cam, false);
 
         gameDirector.player.healthController.onDamage += OnPlayerDamaged;
 

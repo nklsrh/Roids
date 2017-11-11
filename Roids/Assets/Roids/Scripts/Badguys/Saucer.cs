@@ -20,9 +20,9 @@ public class Saucer : Badguy
 
     Vector3 lookAtTarget;
 
-    public Saucer() : base (Wave.EnemyType.Shuttle)
+    public Saucer() : base (Wave.EnemyType.Droid)
     {
-        enemyType = Wave.EnemyType.Shuttle;
+        enemyType = Wave.EnemyType.Droid;
     }
 
     public void Setup(Vector3 direction, float speed, float health, float size, float skill, List<HealthController> targets, ProjectilePoolManager projectileManager, System.Action<Saucer> onDeath)

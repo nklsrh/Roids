@@ -154,7 +154,7 @@ public class GameDirector : BaseObject
                     CalculateForDifficulty(initialAsteroidSpeedStart, initialAsteroidSpeedEnd, wave.Difficulty),
                     wave.Difficulty);
                 break;
-            case Wave.EnemyType.Shuttle:
+            case Wave.EnemyType.Droid:
                 if (wave.objective == Wave.ObjectiveType.Protect)
                 {
                     saucerManager.SetTargets(SelectProtectionTargets());

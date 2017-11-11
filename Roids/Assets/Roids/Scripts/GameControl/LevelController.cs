@@ -56,6 +56,9 @@ public class LevelController : BaseObject
         this.levelData = levelData;
         waves = levelData.waves;
         endlessLevelsComplete = 0;
+        currentWaveTime = 0;
+        enemiesKilled = 0;
+        basesLost = 0;
 
         Setup();
     }
