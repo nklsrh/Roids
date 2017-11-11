@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System;
 
 public class MainGameplayController : MonoBehaviour
 {
@@ -7,6 +9,8 @@ public class MainGameplayController : MonoBehaviour
 	public GameDirector gameDirector;
 	public CameraController cameraController;
     public PostGameController postgameController;
+
+    public List<CameraController> cameraList;
 
     public enum GameState
     {
@@ -23,6 +27,8 @@ public class MainGameplayController : MonoBehaviour
 
     float currentStateTime = 0.0f;
 
+    int currentCamera = 0;
+
     const float TIME_WAIT_BEFORE_GAME_END = 1.0f;
 
     void Start ()
@@ -36,11 +42,25 @@ public class MainGameplayController : MonoBehaviour
 
         uiController.Setup(gameDirector, cameraController);
 
-		cameraController.Setup(gameDirector.player);
+		//cameraController.Setup(gameDirector.player);
+        SelectCamera(0);
 
         gameDirector.StartWave();
 
         SwitchState(GameState.Gameplay);
+    }
+
+    private void SelectCamera(int chosenIndex)
+    {
+        for (int i = 0; i < cameraList.Count; i++)
+        {
+            cameraList[i].Setup(gameDirector.player);
+            cameraList[i].transform.position = cameraController.transform.position;
+            cameraList[i].gameObject.SetActive(i == chosenIndex);
+        }
+
+        currentCamera = chosenIndex;
+        cameraController = cameraList[chosenIndex];
     }
 
     void SwitchState(GameState newState)
@@ -74,6 +94,11 @@ public class MainGameplayController : MonoBehaviour
     {
         gameDirector.Logic();
         uiController.Logic();
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            SelectCamera((currentCamera + 1) % cameraList.Count);
+        }
     }
 
     void MainGameplayLateLoop()
