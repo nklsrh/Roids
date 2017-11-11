@@ -18,6 +18,8 @@ public class Saucer : Badguy
     HealthController currentTarget;
     float skill = 0.0f;
 
+    Vector3 lookAtTarget;
+
     public Saucer() : base (Wave.EnemyType.Saucer)
     {
         enemyType = Wave.EnemyType.Saucer;
@@ -49,7 +51,7 @@ public class Saucer : Badguy
     {
         foreach (HealthController hc in targets)
         {
-            if (!hc.IsAlive)
+            if (hc != null && !hc.IsAlive)
             {
                 targets.Remove(hc);
             }
@@ -84,6 +86,17 @@ public class Saucer : Badguy
 
             weaponController.Fire((targetDelta + randomness).normalized, fireSpeed);
         }
+
+        if (currentTarget != null)
+        {
+            lookAtTarget = Vector3.Slerp(lookAtTarget, currentTarget.transform.position, Time.deltaTime);
+        }
+        else
+        {
+            lookAtTarget = Vector3.Slerp(lookAtTarget, transform.position + Direction * 10, Time.deltaTime);
+        }
+
+        transform.LookAt(lookAtTarget);
     }
 
     public override void Die()

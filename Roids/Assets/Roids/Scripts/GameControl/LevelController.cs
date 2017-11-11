@@ -105,7 +105,6 @@ public class LevelController : BaseObject
     private void CalculateEndlessDifficulty()
     {
         overrideEndlessDifficulty = Mathf.Min(endlessLevelsComplete * 0.5f + (currentWave * 0.15f), 6.0f);
-        Debug.Log("OVERRIDE ENDLESS DIFFICULTY: " + overrideEndlessDifficulty + " : " + currentWave + " : " + endlessLevelsComplete);
     }
 
     private void FinishWave()

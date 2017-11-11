@@ -17,7 +17,7 @@ public class AsteroidManager : BadguyManager
         for (int i = 0; i < count; i++)
         {
             Asteroid a = GetNewBadguy() as Asteroid;
-            a.transform.position = Vector3.Scale(Random.onUnitSphere * 1222, new Vector3(1, 0, 1));// new Vector3(Random.Range(-3, 3), 0, Random.Range(-3, 3));
+            a.transform.position = Vector3.Scale(Random.onUnitSphere * 1000, new Vector3(1, 0, 1));// new Vector3(Random.Range(-3, 3), 0, Random.Range(-3, 3));
 
             Vector3 randomDir = GetRandomDirection();
             float randomSpeed = baseSpeed * Random.Range(minInitialAsteroidSpeed, maxInitialAsteroidSpeed);

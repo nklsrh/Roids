@@ -8,6 +8,7 @@ public class CameraController : BaseObject
 
     public float lookForward = 1;
     public float lookUsingVelocity = 1;
+    public bool disableRotation = false;
 
     public float lookLerp = 10.0f;
     public float moveLerp = 10.0f;
@@ -43,7 +44,11 @@ public class CameraController : BaseObject
     public override void Logic()
     {
         transform.position = movementPosition;
-        transform.LookAt(lookAtPosition);
+
+        if (!disableRotation)
+        {
+            transform.LookAt(lookAtPosition);
+        }
 
         Vector3 wantedPosition = useLocalOffset ? targetPlayer.transform.TransformPoint(offset) : targetPlayer.transform.position + offset;
         movementPosition = Vector3.Slerp(movementPosition, wantedPosition, moveLerp * Time.deltaTime);

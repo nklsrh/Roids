@@ -10,6 +10,7 @@ public class Asteroid : Badguy
     }
 
     public float explosionSizeWhenHit = 0.17f;
+    public float rotationMultiplier = 0.2f;
 
     public Asteroid () : base(Wave.EnemyType.Asteroid)
     {
@@ -33,5 +34,12 @@ public class Asteroid : Badguy
         base.Die();
 
         GameDirector.Explosion(transform.position, (1 + ChunksRemaining) * explosionSizeWhenHit);
+    }
+
+    public override void Logic()
+    {
+        base.Logic();
+
+        transform.Rotate(Speed * Speed * Random.onUnitSphere * rotationMultiplier + Speed * Speed * Quaternion.LookRotation(Direction).eulerAngles * rotationMultiplier * Time.deltaTime, Space.Self);
     }
 }
