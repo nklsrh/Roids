@@ -10,6 +10,7 @@ public class Projectile : BaseObject
     }
 
     public float lifetime = 1.0f;
+    float currentLifetime = 0;
 
     public float damage;
 
@@ -18,6 +19,7 @@ public class Projectile : BaseObject
     public override void Setup()
     {
         gameObject.SetActive(true);
+        currentLifetime = lifetime;
     }
 
     public virtual void SetupProjectile(System.Action<Projectile> onDeath)
@@ -28,8 +30,8 @@ public class Projectile : BaseObject
     public override void Logic()
     {
         transform.position += Velocity * Time.deltaTime;
-        lifetime -= Time.deltaTime;
-        if (lifetime <= 0)
+        currentLifetime -= Time.deltaTime;
+        if (currentLifetime <= 0)
         {
             Die();
         }

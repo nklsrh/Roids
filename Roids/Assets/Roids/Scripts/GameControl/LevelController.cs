@@ -25,10 +25,15 @@ public class LevelController : BaseObject
             return wave;
         }
     }
-    private Wave[] waves;
+
+    public ProtectBase[] ActiveProtectBases
+    {
+        get; private set;
+    }
+
 
     LevelData levelData;
-
+    Wave[] waves;
     Wave wave;
     int currentWave = 0;
     float currentWaveTime = 0;
@@ -41,10 +46,11 @@ public class LevelController : BaseObject
 
     System.Action<Wave> actionWaveStarted;
     System.Action actionWaveComplete;
+    System.Action actionWaveFailed;
 
     public override void Setup() { }
 
-    public void Setup(LevelData levelData, System.Action<Wave> actionWaveStarted, System.Action actionWaveComplete)
+    public void Setup(LevelData levelData, System.Action<Wave> actionWaveStarted, System.Action actionWaveComplete, System.Action actionWaveFailed)
     {
         this.levelData = levelData;
         waves = levelData.waves;
@@ -52,6 +58,7 @@ public class LevelController : BaseObject
 
         this.actionWaveStarted = actionWaveStarted;
         this.actionWaveComplete = actionWaveComplete;
+        this.actionWaveFailed = actionWaveFailed;
 
         Setup();
     }
@@ -141,6 +148,14 @@ public class LevelController : BaseObject
         {
             FinishWave();
         }
+        else if (IsWaveFailed())
+        {
+            Debug.Log("WAVE FAILED!");
+            if (actionWaveFailed != null)
+            {
+                actionWaveFailed.Invoke();
+            }
+        }
 
         currentWaveTime += Time.deltaTime;
     }
@@ -174,12 +189,14 @@ public class LevelController : BaseObject
             protectBases[i].Disable();
         }
 
+        ActiveProtectBases = new ProtectBase[chosenBases.Length];
 
         // then bring some of them online as required
         for (int i = 0; i < chosenBases.Length; i++)
         {
-            protectBases[i].Setup();
-            protectBases[i].onDeath += OnBaseLost;
+            protectBases[chosenBases[i]].Setup();
+            protectBases[chosenBases[i]].onDeath += OnBaseLost;
+            ActiveProtectBases[i] = protectBases[chosenBases[i]];
         }
     }
 
@@ -198,8 +215,17 @@ public class LevelController : BaseObject
             case Wave.ObjectiveType.Survive:
                 return (currentWaveTime >= Wave.duration);
             case Wave.ObjectiveType.Protect:
-                Debug.Log("BAES LOST: " + basesLost + "/" + Wave.objectiveRequiredValue);
                 return (currentWaveTime >= Wave.duration && basesLost < Wave.objectiveRequiredValue);
+        }
+        return false;
+    }
+
+    private bool IsWaveFailed()
+    {
+        switch (Wave.objective)
+        {
+            case Wave.ObjectiveType.Protect:
+                return (basesLost >= Wave.objectiveRequiredValue);
         }
         return false;
     }

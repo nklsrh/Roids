@@ -9,6 +9,8 @@ public class Asteroid : Badguy
         get; private set;
     }
 
+    public float explosionSizeWhenHit = 0.17f;
+
     public Asteroid () : base(Wave.EnemyType.Asteroid)
     {
         enemyType = Wave.EnemyType.Asteroid;
@@ -24,5 +26,12 @@ public class Asteroid : Badguy
         {
             onHit.Invoke(b as Asteroid);
         });
+    }
+
+    public override void Die()
+    {
+        base.Die();
+
+        GameDirector.Explosion(transform.position, (1 + ChunksRemaining) * explosionSizeWhenHit);
     }
 }

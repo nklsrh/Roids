@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameDirector : BaseObject
 {
@@ -32,10 +33,10 @@ public class GameDirector : BaseObject
 
     public System.Action<Wave> onWaveStarted;
     public System.Action<Wave> onWaveComplete;
+    public System.Action<Wave> onWaveFailed;
     public System.Action<int> onLevelComplete;
     public System.Action<Wave.EnemyType> onSpawnEnemies;
-    public System.Action<Wave.EnemyType> onClearEnemies;
-
+    public System.Action<Wave.EnemyType> onBadguyKilled;
 
     // __________________________________________________________________________________________PRIVATES (heh)
 
@@ -57,10 +58,12 @@ public class GameDirector : BaseObject
 
         LoadLevelData();
 
-        levelController.Setup(levelData, OnWaveStarted, OnWaveComplete);
-        asteroidManager.Setup(null, ClearEnemies);
-        saucerManager.Setup(null, ClearEnemies);
+        levelController.Setup(levelData, OnWaveStarted, OnWaveComplete, OnWaveFailed);
+        asteroidManager.Setup(null, OnBadguyKilled);
+        saucerManager.Setup(null, OnBadguyKilled);
         explosionManager.Setup();
+
+        ExplosionManagerStatic = explosionManager;
     }
 
     private void LoadLevelData()
@@ -70,6 +73,8 @@ public class GameDirector : BaseObject
 
     public override void Logic()
     {
+        base.Logic();
+
         player.Logic();
         asteroidManager.Logic();
         saucerManager.Logic();
@@ -144,23 +149,28 @@ public class GameDirector : BaseObject
                     wave.Difficulty);
                 break;
             case Wave.EnemyType.Saucer:
-                saucerManager.SetTargets(new Transform[] { player.transform });
+                if (wave.objective == Wave.ObjectiveType.Protect)
+                {
+                    saucerManager.SetTargets(SelectProtectionTargets());
+                }
+                else
+                {
+                    saucerManager.SetTargets(new List<HealthController> { player.healthController, player.healthController, null });    // 33% chance of shooting randomly
+                }
                 saucerManager.SpawnNewSet(wave.enemyCount,
-                    2f,
+                    1f,
                     CalculateForDifficulty(saucerSpeedStart, saucerSpeedEnd, wave.Difficulty),
                     wave.Difficulty);
                 break;
         }
     }
 
-    private void ClearEnemies(Badguy badguy)
+    private void OnBadguyKilled(Badguy badguy)
     {
-        if (onClearEnemies != null)
+        if (onBadguyKilled != null)
         {
-            onClearEnemies.Invoke(badguy.EnemyType);
+            onBadguyKilled.Invoke(badguy.EnemyType);
         }
-
-        explosionManager.CreateExplosion(badguy.transform.position, (float)badguy.healthController.HealthMax / 20.0f);
 
         levelController.BadguyCleared(badguy);
     }
@@ -180,9 +190,39 @@ public class GameDirector : BaseObject
         }
     }
 
+    private void OnWaveFailed()
+    {
+        if (onWaveFailed != null)
+        {
+            onWaveFailed.Invoke(levelController.Wave);
+        }
+    }
+
     private float CalculateValueForLevel(float valueAtFirstLevel, float valueAtLastLevel)
     {
         return CalculateForDifficulty(valueAtFirstLevel, valueAtLastLevel, Mathf.Clamp01(currentLevel / (float)maxLevel));
+    }
+
+
+    private List<HealthController> SelectProtectionTargets()
+    {
+        List<HealthController> targets = new List<HealthController>();
+        for (int i = 0; i < levelController.ActiveProtectBases.Length; i++)
+        {
+            targets.Add(levelController.ActiveProtectBases[i].healthController);
+        }
+        targets.Add(player.healthController);
+        return targets;
+    }
+
+
+    private static ExplosionManager ExplosionManagerStatic;
+    public static void Explosion(Vector3 position, float scale)
+    {
+        if (ExplosionManagerStatic != null)
+        {
+            ExplosionManagerStatic.CreateExplosion(position, scale);
+        }
     }
 
     /// <summary>
@@ -192,7 +232,7 @@ public class GameDirector : BaseObject
     /// <param name="valueHardest"></param>
     /// <param name="difficulty"></param>
     /// <returns></returns>
-    private float CalculateForDifficulty(float valueEasiest, float valueHardest, float difficulty)
+    public static float CalculateForDifficulty(float valueEasiest, float valueHardest, float difficulty)
     {
         return valueEasiest + (valueHardest - valueEasiest) * difficulty;
     }

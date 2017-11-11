@@ -71,6 +71,8 @@ public class PlayerController : BaseObject
 
     public override void Logic ()
     {
+        base.Logic();
+
         MovementLogic();
         WeaponLogic();
     }
@@ -102,8 +104,6 @@ public class PlayerController : BaseObject
         // WEAPON LOGIC
 
         weaponController.Logic();
-
-
 
         // MOVEMENT SLOWDOWN
 

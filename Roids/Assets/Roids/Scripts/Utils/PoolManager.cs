@@ -95,6 +95,15 @@ public class PoolManager
         Count--;
     }
 
+    public virtual void DisableAll()
+    {
+        for (int i = 0; i < objectList.Count; i++)
+        {
+            objectList[i].gameObject.SetActive(false);
+            DisableObject(objectList[i]);
+        }
+    }
+
     //public virtual void ClearAll()
     //{
     //    for (int i = 0; i < objectList.Count; i++)

@@ -58,4 +58,9 @@ public class WeaponController : BaseObject
 
         IsReady = false;
     }
+
+    public void Disable()
+    {
+        pool.DisableAll();
+    }
 }

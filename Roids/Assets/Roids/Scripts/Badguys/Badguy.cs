@@ -23,6 +23,11 @@ public class Badguy : BaseObject
         private set;
     }
 
+    public float ExplosionSize
+    {
+        get; protected set;
+    }
+
     // __________________________________________________________________________________________PRIVATES (heh)
 
     protected Wave.EnemyType enemyType = Wave.EnemyType.Stomper;
@@ -65,11 +70,13 @@ public class Badguy : BaseObject
 
     public override void Logic()
     {
+        base.Logic();
         transform.position += Direction * Speed * Time.deltaTime;
     }
 
     public virtual void Die()
     {
+        ExplosionSize = healthController.HealthMax > 50 ? healthController.HealthMax / 80f : 0.5f;
         gameObject.SetActive(false);
     }
 
