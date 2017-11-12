@@ -1,7 +1,10 @@
-# Roids
-A game inspired by the Atari classic 'Asteroids', built in Unity3D/C#
+<img src="./Screenshots/RoidsScreenshot001MainMenu.png" width="500">
 
+A game inspired by the Atari classic 'Asteroids', built in Unity3D/C#.  
 This project is being built with Unity 5.3.4, though you can probably make it work in any Unity 5.x installation.
+
+<img src="./Screenshots/RoidsScreenshot003GameplayFlying.png" width="300">  
+<img src="./Screenshots/RoidsScreenshot005Finale.png" width="300">
 
 ### My Original Plan
 1. Replicate Asteroids gameplay as much as possible  
@@ -9,6 +12,7 @@ This project is being built with Unity 5.3.4, though you can probably make it wo
 3. Tweak camera until satisfactory for fun action gameplay  
 4. Add 2-3 extra objectives to shift focus away from 'simply shoot everything'
 
+<img src="./Screenshots/RoidsScreenshot006Polystation.png" width="300">  
 
 ## Post-Mortem
 
@@ -70,6 +74,8 @@ This project is being built with Unity 5.3.4, though you can probably make it wo
 + Maybe more code comments?    
   + I value code clarity over comments so this codebase should be easy to read      
     + But if it's not clear, then more comments!        
+
+<img src="./Screenshots/RoidsScreenshot004Explosion.png" width="500">  
 
 ### TODO List
 1. I had a system for high-scores halfway done before I scrapped it to meet the deadline  
