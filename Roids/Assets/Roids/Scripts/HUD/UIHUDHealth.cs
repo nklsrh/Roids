@@ -11,7 +11,6 @@ public class UIHUDHealth : MonoBehaviour
 
     Transform tracking;
 	CameraController trackingCamera;
-    RectTransform canvas;
     bool trackWorldSpace = true;
 
 	public void Enable()
@@ -24,12 +23,11 @@ public class UIHUDHealth : MonoBehaviour
 		gameObject.SetActive(false);
 	}
 
-	public void Setup(RectTransform canvas, HealthController healthController, CameraController cam, bool trackWorldSpace = true)
+	public void Setup(HealthController healthController, CameraController cam, bool trackWorldSpace = true)
 	{
 		this.healthController = healthController;
 		this.tracking = healthController.transform;
 		this.trackingCamera = cam;
-        this.canvas = canvas;
         this.trackWorldSpace = trackWorldSpace;
     }
 

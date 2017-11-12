@@ -42,7 +42,7 @@ public class UIHUDController : BaseObject
 
 		mainCamera = cam;
 
-        playerHealthBar.Setup(canvas.GetComponent<RectTransform>(), gameDirector.player.healthController, cam, false);
+        playerHealthBar.Setup(gameDirector.player.healthController, cam, false);
 
         gameDirector.player.healthController.onDamage += OnPlayerDamaged;
 
@@ -132,7 +132,7 @@ public class UIHUDController : BaseObject
 		if (healthController.isTrackedByUI)
 		{
 			UIHUDHealth h = Instantiate(health);
-			h.Setup(canvas.GetComponent<RectTransform>(), healthController, mainCamera);
+			h.Setup(healthController, mainCamera);
 
 			h.transform.SetParent(health.transform.parent, false);
 			
@@ -147,6 +147,6 @@ public class UIHUDController : BaseObject
 
     private void OnBaseLost(int basesLost, int totalBases)
     {
-        notifyWarning.Popup(basesLost + "/" + totalBases + " bases lost!", "Warning", 1.5f);
+        notifyWarning.Popup(Mathf.Min(basesLost, totalBases) + "/" + totalBases + " bases lost!", "Warning", 1.5f);
     }
 }
