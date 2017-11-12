@@ -1,10 +1,9 @@
-<img src="./Screenshots/RoidsScreenshot001MainMenu.png" width="500">
+<img src="./Screenshots/RoidsGameplayGIF.gif" width="500">  
 
 A game inspired by the Atari classic 'Asteroids', built in Unity3D/C#.  
 This project is being built with Unity 5.3.4, though you can probably make it work in any Unity 5.x installation.
 
-<img src="./Screenshots/RoidsScreenshot003GameplayFlying.png" width="300">  
-<img src="./Screenshots/RoidsScreenshot005Finale.png" width="300">
+<img src="./Screenshots/RoidsScreenshot003GameplayFlying.png" width="500">  
 
 ### My Original Plan
 1. Replicate Asteroids gameplay as much as possible  
