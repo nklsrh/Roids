@@ -5,7 +5,6 @@ using System.Collections.Generic;
 [System.Serializable]
 public class ProjectilePoolManager : PoolManager
 {
-    public ProjectilePoolManager() { }
     public ProjectilePoolManager(int poolSize)
     {
         Setup(poolSize);

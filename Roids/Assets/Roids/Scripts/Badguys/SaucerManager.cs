@@ -27,13 +27,14 @@ public class SaucerManager : BadguyManager
         for (int i = 0; i < count; i++)
         {
             Saucer saucer = GetNewBadguy() as Saucer;
-            saucer.transform.position = Vector3.Scale(Random.onUnitSphere * 1000, new Vector3(1, 0, 1));// new Vector3(Random.Range(-3, 3), 0, Random.Range(-3, 3));
+            
+            // Spawn it outside the play area so the trigger then moves it to the edge of the area
+            saucer.transform.position = Vector3.Scale(Random.onUnitSphere * 1000, new Vector3(1, 0, 1));
 
             Vector3 randomDir = GetRandomDirection();
             float randomSpeed = baseSpeed * Random.Range(minInitialSaucerSpeed, maxInitialSaucerSpeed);
-            float randomSize = maxSize;
 
-            saucer.Setup(randomDir, randomSpeed, GameDirector.CalculateForDifficulty(initialSaucerHealthMin, initialSaucerHealthMax, skill), randomSize, skill, targets, projectileManager, RemoveBadguy);
+            saucer.Setup(randomDir, randomSpeed, GameDirector.CalculateForDifficulty(initialSaucerHealthMin, initialSaucerHealthMax, skill), maxSize, skill, targets, projectileManager, RemoveBadguy);
         }
     }
 

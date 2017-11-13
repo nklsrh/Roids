@@ -1,22 +1,21 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 [System.Serializable]
 public class PoolManager
 {
+    public int Count
+    {
+        get;
+        private set;
+    }
+
     protected List<BaseObject> objectList;
     int lastUsedObject = -1;
 
     int poolSize = 20;
     float timeBetweenCleanups = 5.0f;
     float currentTimeBetweenCleanup = 5.0f;
-
-    public int Count
-    {
-        get;
-        private set;
-    }
 
     public PoolManager() { }
     public PoolManager(int poolSize)
@@ -105,12 +104,13 @@ public class PoolManager
         }
     }
 
-    //public virtual void ClearAll()
-    //{
-    //    for (int i = 0; i < objectList.Count; i++)
-    //    {
-    //        BaseObject.Destroy(objectList[i]);
-    //    }
-    //    objectList.Clear();
-    //}
+    public virtual void ClearAll()
+    {
+       for (int i = 0; i < objectList.Count; i++)
+       {
+           BaseObject.Destroy(objectList[i]);
+           objectList[i] = null;
+       }
+       objectList.Clear();
+    }
 }

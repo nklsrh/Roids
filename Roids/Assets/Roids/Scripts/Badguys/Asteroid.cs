@@ -1,16 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 [RequireComponent(typeof(Collider))]
 public class Asteroid : Badguy
 {
+    public float explosionSizeWhenHit = 0.17f;
+    public float rotationMultiplier = 0.2f;
+
     public int ChunksRemaining
     {
         get; private set;
     }
-
-    public float explosionSizeWhenHit = 0.17f;
-    public float rotationMultiplier = 0.2f;
 
     public Asteroid () : base(Wave.EnemyType.Asteroid)
     {

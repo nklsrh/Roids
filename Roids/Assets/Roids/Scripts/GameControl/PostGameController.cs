@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class PostGameController : MonoBehaviour
 {
     public TMPro.TextMeshProUGUI txtScore;
+    public string sceneName = "scene_menu";
 
     public bool IsSetup
     {
@@ -21,7 +21,7 @@ public class PostGameController : MonoBehaviour
 
     public void OnAnimationComplete()
     {
-        Application.LoadLevel("scene_menu");
+        Application.LoadLevel(sceneName);
     }
 
     public void Disable()

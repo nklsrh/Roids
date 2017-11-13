@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
 public class AsteroidManager : BadguyManager
 {
@@ -17,7 +15,9 @@ public class AsteroidManager : BadguyManager
         for (int i = 0; i < count; i++)
         {
             Asteroid a = GetNewBadguy() as Asteroid;
-            a.transform.position = Vector3.Scale(Random.onUnitSphere * 1000, new Vector3(1, 0, 1));// new Vector3(Random.Range(-3, 3), 0, Random.Range(-3, 3));
+
+            // Spawn it outside the play area so the trigger then moves it to the edge of the area
+            a.transform.position = Vector3.Scale(Random.onUnitSphere * 1000, new Vector3(1, 0, 1));
 
             Vector3 randomDir = GetRandomDirection();
             float randomSpeed = baseSpeed * Random.Range(minInitialAsteroidSpeed, maxInitialAsteroidSpeed);
@@ -39,7 +39,7 @@ public class AsteroidManager : BadguyManager
                 // so you have to chase them down / they don't hurtle toward you
                 Vector3 randomDir = (asteroid.HitFromDirection + GetRandomDirection()).normalized;
                 float newSpeed = asteroid.Speed * smallerAsteroidSpeedMultiplier * Random.Range(0.6f, 2f);
-                float newSize = asteroidSizesByHealth[asteroid.ChunksRemaining - 1]; //asteroid.transform.localScale.x * (asteroid.Lives - 1) / asteroid.Lives;
+                float newSize = asteroidSizesByHealth[asteroid.ChunksRemaining - 1];
 
                 newAsteroid.Setup(randomDir, newSpeed, asteroid.healthController.HealthMax, newSize, asteroid.ChunksRemaining - 1, AsteroidHit);
 

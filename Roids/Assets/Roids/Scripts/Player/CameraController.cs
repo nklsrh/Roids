@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class CameraController : BaseObject
 {
@@ -24,6 +23,7 @@ public class CameraController : BaseObject
             return (thisCamera = GetComponent<Camera>());
         }
     }
+    
     Camera thisCamera;
 
     Transform targetTransform;

@@ -4,19 +4,18 @@ using System.Collections.Generic;
 
 public class Projectile : BaseObject
 {
+    public float lifetime = 1.0f;
+    public float damage;
+    public List<AudioSource> audioBlastOptions;
+
     public Vector3 Velocity
     {
         get;
         protected set;
     }
 
-    public float lifetime = 1.0f;
     float currentLifetime = 0;
-
-    public float damage;
-
-    public List<AudioSource> audioBlastOptions;
-
+    
     protected System.Action<Projectile> onDeath;
 
     public override void Setup()

@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System;
 
 public class MainGameplayController : MonoBehaviour
 {
+    
+    // __________________________________________________________________________________________EDITOR
+
 	public UIHUDController uiController;
 	public GameDirector gameDirector;
 	public CameraController cameraController;
     public PostGameController postgameController;
 
     public List<CameraController> cameraList;
+    
+    // __________________________________________________________________________________________PUBLICS
 
     public enum GameState
     {
@@ -20,16 +23,20 @@ public class MainGameplayController : MonoBehaviour
         Paused,
         Postgame,
     }
+    
+    // __________________________________________________________________________________________PRIVATES
+
     GameState currentState;
 
     System.Action currentLoop;
     System.Action currentLateLoop;
 
     float currentStateTime = 0.0f;
-
     int currentCamera = 0;
 
     const float TIME_WAIT_BEFORE_GAME_END = 1.0f;
+
+    // __________________________________________________________________________________________METHODS
 
     void Start ()
     {
@@ -113,7 +120,7 @@ public class MainGameplayController : MonoBehaviour
 
     void PausedLoop()
     {
-
+        // TODO pause state logic
     }
 
     void PostgameLoop()
@@ -130,7 +137,7 @@ public class MainGameplayController : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 0.3f;
+            Time.timeScale = 0.3f;      // TODO better timescale management
             MainGameplayLoop();
         }
     }

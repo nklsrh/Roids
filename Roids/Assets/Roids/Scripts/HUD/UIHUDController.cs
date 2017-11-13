@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class UIHUDController : BaseObject 
@@ -30,10 +29,7 @@ public class UIHUDController : BaseObject
 	{
 		healthBarList = new List<UIHUDHealth>();
 
-		HealthController.onCreated += OnHealthCreated;
-		HealthController.onDestroyed += OnHealthDestroyed;
-
-        PlayableArea.onLeavingPlayArea += OnLeavingPlayArea;
+        AddStaticEvents();
 
         gameDirector.onWaveStarted += OnWaveStarted;
 		gameDirector.onWaveComplete += OnWaveComplete;
@@ -56,7 +52,20 @@ public class UIHUDController : BaseObject
         animationWipe.Play();
     }
 
-    void OnDestroy()
+    private void OnDestroy()
+    {
+        RemoveStaticEvents();
+    }
+
+    private void AddStaticEvents()
+    {
+		HealthController.onCreated += OnHealthCreated;
+		HealthController.onDestroyed += OnHealthDestroyed;
+
+        PlayableArea.onLeavingPlayArea += OnLeavingPlayArea;
+    }
+
+    private void RemoveStaticEvents()
     {
         HealthController.onCreated -= OnHealthCreated;
         HealthController.onDestroyed -= OnHealthDestroyed;
@@ -81,6 +90,7 @@ public class UIHUDController : BaseObject
 
 	void OnHealthCreated(HealthController healthController)
 	{
+        // TODO Bring back the health HUDs!
 		//AddHealthBar(healthController);
 	}
 

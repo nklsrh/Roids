@@ -50,6 +50,6 @@ public class UIHUDHealth : MonoBehaviour
         Camera cam = trackingCamera.Camera;
         Vector3 screenPos = cam.WorldToScreenPoint(trackedPosition);
 
-        GetComponent<RectTransform>().localPosition = screenPos;
+        transform.position = screenPos;
     }
 }

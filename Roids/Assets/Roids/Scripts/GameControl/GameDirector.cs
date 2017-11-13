@@ -50,6 +50,7 @@ public class GameDirector : BaseObject
     float timeWhenWaveFinished = 0;
 
     const float WAIT_BETWEEN_WAVES = 3.0f;
+    const string LEVEL_DATA_FOLDER = "LevelData";
 
     // __________________________________________________________________________________________METHODS
 
@@ -75,7 +76,7 @@ public class GameDirector : BaseObject
 
     private void LoadLevelData()
     {
-        levelData = Instantiate(Resources.Load<LevelData>(System.IO.Path.Combine("LevelData", levelName)));
+        levelData = Instantiate(Resources.Load<LevelData>(System.IO.Path.Combine(LEVEL_DATA_FOLDER, levelName)));
     }
 
     public override void Logic()
@@ -124,7 +125,7 @@ public class GameDirector : BaseObject
         StartWave();
     }
 
-    void LevelComplete()
+    private void LevelComplete()
     {
         if (onLevelComplete != null)
         {

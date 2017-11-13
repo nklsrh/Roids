@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 [RequireComponent(typeof(Collider))]
 public class Badguy : BaseObject
@@ -94,7 +93,7 @@ public class Badguy : BaseObject
 
             healthController.Damage(projectile.damage);
 
-            HitFromDirection = projectile.Velocity.normalized; //(transform.position - collider.transform.position).normalized;
+            HitFromDirection = projectile.Velocity.normalized;
             if (onHit != null)
             {
                 onHit.Invoke(this);

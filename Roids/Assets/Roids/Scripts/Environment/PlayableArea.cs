@@ -18,8 +18,6 @@ public class PlayableArea : MonoBehaviour
 
         PlayerController player = t.GetComponent<PlayerController>();
 
-        //Vector3 positionLocalToArea = transform.InverseTransformPoint(t.transform.position);
-
         float newValX = t.position.x;
         float newValZ = t.position.z;
 

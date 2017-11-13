@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-[System.Serializable]
+﻿[System.Serializable]
 public class Wave
 {
     public enum ObjectiveType
@@ -16,6 +13,13 @@ public class Wave
         Asteroid = 0,
         Droid = 1,
     }
+
+    public ObjectiveType objective;
+    public EnemyType enemyType;
+    public int enemyCount = 1;
+    public float difficulty = 0.0f;
+    public float duration = -1;
+    public int objectiveRequiredValue = 0;
 
     public float Difficulty
     {
@@ -33,13 +37,8 @@ public class Wave
         }
     }
 
-    public ObjectiveType objective;
-    public EnemyType enemyType;
-    public int enemyCount = 1;
-    public float difficulty = 0.0f;
-    public float duration = -1;
-    public int objectiveRequiredValue = 0;
     private float overrideDifficulty = 0;
+
 
     public string GetObjectiveString()
     {

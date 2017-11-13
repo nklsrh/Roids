@@ -121,6 +121,7 @@ public class LevelController : BaseObject
 
     private void CalculateEndlessDifficulty()
     {
+        // TODO: mumbo-jumbo hardcoded difficulty curve (needs to be better exposed)
         overrideEndlessDifficulty = Mathf.Min(endlessLevelsComplete * 0.5f + (currentWave * 0.15f), 6.0f);
     }
 

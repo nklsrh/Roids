@@ -74,10 +74,6 @@ public class PlayerInputTouch : PlayerInput
         }
 
         float thrust = Input.touchCount > 1 ? 1.0f : Input.GetAxis("Vertical");
-        // float thrust = Input.GetAxis("Vertical");
-        // if (thrust > 0)
-        {
-            playerController.Thrust(thrust);
-        }
+        playerController.Thrust(thrust);
     }
 }

@@ -30,7 +30,8 @@ public class HoveringObject : MonoBehaviour
 
         transform.localPosition = startingPosition + Vector3.up * ((Mathf.Sin(t * hoverBobSpeed) + 1) / 2) * hoverHeight;    // sine curve with lowest point at 0, not -1
 
-        transform.localRotation = startingRotation * Quaternion.AngleAxis(Mathf.Sin(t * hoverWobbleSpeed) * hoverWobble, Vector3.left)
-            * Quaternion.AngleAxis(Mathf.Cos(t * hoverWobbleSpeed) * hoverWobble * 0.5f, Vector3.forward);
+        transform.localRotation = startingRotation 
+        * Quaternion.AngleAxis(Mathf.Sin(t * hoverWobbleSpeed) * hoverWobble, Vector3.left)
+        * Quaternion.AngleAxis(Mathf.Cos(t * hoverWobbleSpeed) * hoverWobble * 0.5f, Vector3.forward);
 	}
 }

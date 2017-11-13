@@ -1,9 +1,15 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 [System.Serializable]
 public class HealthController : BaseObject
 {
+    // __________________________________________________________________________________________EDITOR
+    public bool isTrackedByUI = true;
+
+    public System.Action<float> onDamage;
+    public System.Action<float> onRegen;
+    public System.Action onDeath;
+    
     public float Health
     {
         get; private set;
@@ -22,16 +28,11 @@ public class HealthController : BaseObject
         }
     }
 
-    public bool isTrackedByUI = true;
-
-    public System.Action<float> onDamage;
-    public System.Action<float> onRegen;
-    public System.Action onDeath;
-
-    public static System.Action<HealthController> onCreated;
-    public static System.Action<HealthController> onDestroyed;
+    // __________________________________________________________________________________________PRIVATES
 
     private bool isInvincible = false;
+
+    // __________________________________________________________________________________________METHODS
 
     public override void Setup() { }
 
@@ -91,14 +92,14 @@ public class HealthController : BaseObject
         }
     }
 
-    public override void Logic()
-    {
-
-    }
-
     public void SetInvincible(bool isInvincible)
     {
         this.isInvincible = isInvincible;
     }
 
+
+    // __________________________________________________________________________________________STATICS
+
+    public static System.Action<HealthController> onCreated;
+    public static System.Action<HealthController> onDestroyed;
 }
