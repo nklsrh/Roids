@@ -10,10 +10,13 @@ public class MainGameplayController : MonoBehaviour
 	public GameDirector gameDirector;
 	public CameraController cameraController;
     public PostGameController postgameController;
+    public UITouchController touchController;
 
     public List<CameraController> cameraList;
-    
+
     // __________________________________________________________________________________________PUBLICS
+
+    public bool isUsingTouchControls = false;
 
     public enum GameState
     {
@@ -48,6 +51,20 @@ public class MainGameplayController : MonoBehaviour
         gameDirector.onWaveFailed += OnGameOver;
 
         uiController.Setup(gameDirector, cameraController);
+
+        if (isUsingTouchControls)
+        {
+            touchController.gameObject.SetActive(true);
+            touchController.Setup(gameDirector.player);
+
+            gameDirector.player.GetComponent<PlayerInput>().enabled = false;
+        }
+        else
+        {
+            touchController.gameObject.SetActive(false);
+
+            gameDirector.player.GetComponent<PlayerInput>().enabled = true;
+        }
 
         SelectCamera(0);
 
